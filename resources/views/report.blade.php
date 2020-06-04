@@ -52,7 +52,7 @@
                     <input type="text" class="form-control"> --}}
 
                         <input type="checkbox" class="custom-checkbox"
-                        onclick="var input = document.getElementById('other'); if(this.checked){ input.disabled = false; input.focus();}else{input.disabled=true;}" />
+                        onclick="var input = $('#other'); if(this.checked){ input.removeAttr('disabled'); input.focus();}else{input.attr('disabled','disabled');}" />
                         <label for="other">Other: </label>
                         <input id="other" name="other" class="col-md-6 " disabled="disabled"/>
                 </div>
@@ -109,7 +109,7 @@
                 <span class="col-form-label"><strong>:</strong></span>
                 <div class="col-md-3 form-check form-check-inline">
                     <input type="radio" id="other-infect-y" class="form-check-input" name="other-infect"  autofocus
-                    onclick="var input = document.getElementById('infected'); if(this.checked){ input.disabled = false; input.focus();}else{input.disabled=true;}" />
+                    onclick="var input = $('#infected'); if($(this).prop('checked',true)){ input.removeAttr('disabled'); input.focus();}else if($(this).prop('checked',false)){input.attr('disabled','disabled');}" />
 
                     <label for="other-infect-y" class="form-check-label">Yes</label> &nbsp;
                     <input id="infected" name="other-infect" class="col-md-6 " disabled="disabled" placeholder="How many?"/>
@@ -139,5 +139,6 @@
 
     <script>
         $("#institution").hide();
+
     </script>
 @endsection
