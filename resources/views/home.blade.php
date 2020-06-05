@@ -1,6 +1,11 @@
 @extends('layouts.user_home')
 
 @section('content')
+@if(Session::has('alert'))
+        <script type="text/javascript">
+            alert("{{ Session::get('alert') }}");
+        </script>
+    @endif
 <div class="container container-fluid p-5">
     <div class="row justify-content-center">
             <!-- Confirmed cases -->

@@ -20,10 +20,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
-
-Route::get('/report', function(){
-    return view('report');
-});
+Route::get('/report/create', 'ReportController@create')->name('report');
+Route::post('/report', 'ReportController@store',['as'=>'report']);
 
 Route::get('/admin', 'AdminController@index')->name('admin');
 

@@ -21,7 +21,7 @@
 
         <!-- Nav Item - Report -->
         <li class="nav-item">
-            <a class="nav-link " href="{{ url('/report') }}" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link " href="{{ url('/report/create') }}" role="button" aria-haspopup="true" aria-expanded="false">
                 <table>
                     <tr>
                         <td>

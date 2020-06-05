@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Symptom;
+use Illuminate\Support\Facades\Auth;
+use App\Document;
 
 class ReportController extends Controller
 {
@@ -23,7 +26,8 @@ class ReportController extends Controller
      */
     public function create()
     {
-        //
+        $symptoms = Symptom::get();
+        return view('report', compact('symptoms'));
     }
 
     /**
@@ -34,7 +38,20 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $input = $request->all();
+        $user = Auth::user();
+        if($file = $request->file('document')){
+            $name = time().$file->getClientOriginalName();
+            $file->move('documents', $name);
+            $document = Document::create(['file'=>$name]);
+            $input['document_id'] = $document->id;
+        }
+        $symptoms = $request->symptoms;
+        $symptom = join(",", $symptoms);
+        $input['symptoms'] = $symptom;
+        $user->reports()->create($input);
+        $message = "Your report has been received and waiting review by an admin.";
+        return redirect('/')->with('alert', $message);
     }
 
     /**
