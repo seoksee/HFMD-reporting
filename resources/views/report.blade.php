@@ -3,7 +3,7 @@
 @section('content')
     <div class="container report-container p-5">
         <h3 class="text-center"><strong>Hand Foot Mouth Disease Reporting</strong></h3>
-        <form action="" class="user" method="POST">
+        <form action="ReportController@store" class="user" method="POST">
             @csrf
             <div class="form-group row">
                 <label for="DOB" class="col-md-5 col-form-label text-md-right">{{ __('Date of birth of infected child') }}</label>
