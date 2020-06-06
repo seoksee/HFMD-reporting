@@ -17,6 +17,7 @@ class CreateReportsTable extends Migration
             $table->id();
             $table->integer('user_id')->unsigned();
             $table->integer('is_approve')->default(0); //to indicate approval status by admin
+            $table->integer('fatal')->default(0);
             $table->date('DOB');
             $table->string('relationship');
             $table->string('symptoms');

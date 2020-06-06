@@ -72,6 +72,8 @@ class AdminReportsController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $report = Report::findOrFail($id)->update($request->all());
+        return redirect()->back();
     }
 
     /**
@@ -83,5 +85,14 @@ class AdminReportsController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function changeFatal(Request $request)
+    {
+        $report = Report::find($request->id);
+        $report->fatal = $request->fatal;
+        $report->save();
+        // dd($report);
+        return response()->json(['success'=>'Deceased change successfully.']);
     }
 }

@@ -18,6 +18,7 @@ class Report extends Model
         'kindergarten_location',
         'children_in_kindergarten_infected',
         'file',
+        'is_approve',
     ];
 
     public function user(){
@@ -32,5 +33,5 @@ class Report extends Model
         return $this->hasMany('App\Symptom');
     }
 
-    
+
 }

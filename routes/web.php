@@ -13,18 +13,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('home');
-});
+// Route::get('/', function () {
+//     return view('home');
+// });
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('/report/create', 'ReportController@create')->name('report');
 Route::post('/report', 'ReportController@store',['as'=>'report']);
+// Route::patch('/admin/report/{id}', 'ReportController@update');
 
-Route::get('/admin', 'AdminController@index')->name('admin');
+
 
 Route::group(['middleware'=>'admin'], function(){
+    Route::get('/admin', 'AdminController@index')->name('admin');
     Route::resource('admin/report', 'AdminReportsController',['as'=>'admin']);
+    Route::get('/changeFatal', 'AdminReportsController@changeFatal');
 });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Report;
 
 class HomeController extends Controller
 {
@@ -13,7 +14,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+        // $this->middleware('auth');
     }
 
     /**
@@ -23,8 +24,9 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $reports = Report::where('is_approve', 1)->get();
+        return view('home', compact('reports'));
     }
 
-    
+
 }

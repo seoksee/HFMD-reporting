@@ -15,7 +15,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-md font-weight-bold text-primary text-uppercase mb-1">Confirmed Cases</div>
-                      <div class="h1 mb-0 font-weight-bold text-gray-800">18</div>
+                      <div class="h1 mb-0 font-weight-bold text-gray-800">{{count($reports)}}</div>
                     </div>
                     {{-- <div class="col-auto">
                       <i class="fas fa-calendar fa-2x text-gray-300"></i>

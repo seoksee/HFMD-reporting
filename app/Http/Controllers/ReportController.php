@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Symptom;
 use Illuminate\Support\Facades\Auth;
 use App\Document;
+use App\Report;
 
 class ReportController extends Controller
 {
@@ -14,6 +15,11 @@ class ReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         //
@@ -85,7 +91,8 @@ class ReportController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Report::findOrFail($id)->update($request->all());
+        // return redirect()->back();
     }
 
     /**
