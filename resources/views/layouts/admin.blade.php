@@ -5,9 +5,12 @@
 
 
 <body>
-@include('includes.admin_navbar')
+    @include('includes.admin_navbar')
+
     @include('includes.admin_sidebar')
+
     @yield('content')
+
     @include('includes.admin_footer')
 </body>
 

@@ -25,3 +25,6 @@ Route::post('/report', 'ReportController@store',['as'=>'report']);
 
 Route::get('/admin', 'AdminController@index')->name('admin');
 
+Route::group(['middleware'=>'admin'], function(){
+    Route::resource('admin/report', 'AdminReportsController',['as'=>'admin']);
+});
