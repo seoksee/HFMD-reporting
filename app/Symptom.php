@@ -8,4 +8,9 @@ class Symptom extends Model
 {
     //
     protected $fillable = ['name'];
+
+    public function reports()
+    {
+        $this->hasMany('App\Report');
+    }
 }

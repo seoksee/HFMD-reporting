@@ -35,7 +35,15 @@
                     <td>{{$report->user->name}}</td>
                     <td>{{Carbon\Carbon::parse($report->DOB)->diff(Carbon\Carbon::now())->format('%y yrs, %m m/o and %d d')}}</td>
                     <td>{{$report->relationship}}</td>
-                    <td>{{$report->symptoms.",".$report->other_symptoms}}</td>
+                    {{-- <td>{{$report->symptoms.",".$report->other_symptoms}}</td> --}}
+                    <td>
+                        @foreach(explode(',', $report->symptoms) as $symptom)
+                            {{App\Symptom::find((int)$symptom)->name}},
+                        @endforeach
+                        @if($report->other_symptoms)
+                            <strong>{{$report->other_symptoms}}<strong>
+                        @endif
+                    </td>
                     <td>{{$report->residential}}</td>
                     <td>{{$report->diagnosis}}</td>
                     <td>{{$report->hospital_admission==1 ? "Yes" : "No"}}</td>
@@ -45,25 +53,8 @@
                     <td>{{$report->file}}</td>
                     <td>{{$report->created_at}}</td>
                     <td>
-                        {{-- @if($report->is_approve == 1)
-                            Verified
-                            {!! Form::open(['method'=>'PATCH', 'action'=>['AdminReportsController@update', $report->id]]) !!}
-                                <input type="hidden" name="is_approve" value="0">
-                                <div class="">
-                                    {!! Form::submit('Unverify', ['class'=>'btn btn-block btn-outline-info']) !!}
-                                </div>
-                            {!! Form::close() !!}
-                        @else
-                            Not verified
-                            {!! Form::open(['method'=>'PATCH', 'action'=>['AdminReportsController@update', $report->id]]) !!}
-                                <input type="hidden" name="is_approve" value="1">
-                                <div class="">
-                                    {!! Form::submit('Verify', ['class'=>'btn btn-block btn-outline-warning']) !!}
-                                </div>
-                            {!! Form::close() !!}
-                        @endif --}}
                         <input data-id="{{$report->id}}" class="status-class" type="checkbox"
-                        data-onstyle="info" data-offstyle="" data-toggle="toggle" data-on="Verify" data-off="Unverify" {{ $report->is_approve ? 'checked' : '' }}>
+                        data-onstyle="info" data-offstyle="" data-toggle="toggle" data-on="Verified" data-off="Unverified" {{ $report->is_approve ? 'checked' : '' }}>
                     </td>
                     <td>
                         <input data-id="{{$report->id}}" class="toggle-class" type="checkbox"
@@ -91,7 +82,7 @@
             url: '/changeVerify',
             data: {'is_approve': status, 'id': report_id},
             success: function(data){
-              console.log(data.success)
+              alert(data.success)
             },
         });
     });
@@ -99,15 +90,13 @@
     $('.toggle-class').change(function() {
         var status = $(this).prop('checked') == true ? 1 : 0;
         var report_id = $(this).data('id');
-        console.log(report_id);
-        console.log("fdsaf");
         $.ajax({
             type: "GET",
             dataType: "json",
             url: '/changeFatal',
             data: {'fatal': status, 'id': report_id},
             success: function(data){
-              console.log(data.success)
+              alert(data.success)
             },
         });
     })

@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Report;
-use App\Symptom;
+use App\User;
 
-class AdminReportsController extends Controller
+class AdminManageUsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +14,9 @@ class AdminReportsController extends Controller
      */
     public function index()
     {
-        $reports = Report::paginate(8);
-        // dd($reports);
-        foreach($reports as $report){
-            $symptoms = $report->symptoms;
-            $symptom = explode(',', $symptoms);
-            foreach($symptom as $row){
-                $symptomName = Symptom::find((int)$row)->name;
-            }
-        }
-        // return view('/');
-        return view('admin.report', compact('reports'));
+        //
+        $users = User::paginate(10);
+        return(view('admin/manage_users', compact('users')));
     }
 
     /**
@@ -81,8 +72,6 @@ class AdminReportsController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $report = Report::findOrFail($id)->update($request->all());
-        return redirect()->back();
     }
 
     /**
@@ -96,21 +85,11 @@ class AdminReportsController extends Controller
         //
     }
 
-    public function changeFatal(Request $request)
+    public function changeRole(Request $request)
     {
-        $report = Report::find($request->id);
-        $report->fatal = $request->fatal;
-        $report->save();
-        // dd($report);
-        return response()->json(['success'=>'Deceased changed successfully.']);
-    }
-
-    public function changeVerify(Request $request)
-    {
-        $report = Report::find($request->id);
-        $report->is_approve = $request->is_approve;
-        $report->save();
-        // dd($report);
-        return response()->json(['success' => 'Verify status changed successfully.']);
+        $user = User::find($request->id);
+        $user->role_id = $request->role_id;
+        $user->save();
+        return response()->json(['success'=>'User\'s role changed successfully.']);
     }
 }

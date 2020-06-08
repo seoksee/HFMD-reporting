@@ -31,7 +31,7 @@ class Report extends Model
     }
 
     public function symptoms(){
-        return $this->hasMany('App\Symptom');
+        return $this->belongsToMany('App\Symptom');
     }
 
 
