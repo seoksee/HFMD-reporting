@@ -32,7 +32,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-md font-weight-bold text-danger text-uppercase mb-1">Fatal</div>
-                      <div class="h1 mb-0 font-weight-bold text-gray-800">0</div>
+                      <div class="h1 mb-0 font-weight-bold text-gray-800">{{count($fatal)}}</div>
                     </div>
 
                   </div>
@@ -47,7 +47,7 @@
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-md font-weight-bold text-warning text-uppercase mb-1">Total</div>
-                      <div class="h1 mb-0 font-weight-bold text-gray-800">18</div>
+                      <div class="h1 mb-0 font-weight-bold text-gray-800">{{count($reports)+count($fatal)}}</div>
                     </div>
 
                   </div>
@@ -89,8 +89,9 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body row">
-                  <div class="chart-area col-md-10">
-                    <canvas id="myAreaChart"></canvas>
+                  <div class="col-md-10">
+                    {{-- <canvas id="myAreaChart"></canvas> --}}
+                    <canvas id="line-chart"></canvas>
                   </div>
                   <div class="col-md-2">
                     <button class="btn btn-outline-primary dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -109,4 +110,86 @@
 
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+<script>
+var month = <?php echo $monthlyReports; ?>;
+var i;
+var str="";
+for(i=0; i<12; i++){
+    month[i]=month[i+1];
+    if(month[i]==null){
+        month[i]=0;
+    }
+    if(i==11){
+        str += month[i];
+    }else{
+        str= str+month[i]+",";
+    }
+};
+var data_month = str.split(",");
+var lineChartData = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [{
+        label: 'number of cases',
+        backgroundColor:  [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+        data: data_month
+    }]
+};
+console.log(month);
+console.log(data_month);
+console.log(lineChartData);
+var ctx = $('#line-chart');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data:
+        // lineChartData,
+        {
+            labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+            datasets: [{
+                label: 'Data of CMS',
+                data:
+                data_month
+                // 1,2,3,4,5,6,7,8,9,1,2
+            ,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
 @endsection

@@ -30,4 +30,5 @@ Route::group(['middleware'=>'admin'], function(){
     Route::get('/admin', 'AdminController@index')->name('admin');
     Route::resource('admin/report', 'AdminReportsController',['as'=>'admin']);
     Route::get('/changeFatal', 'AdminReportsController@changeFatal');
+    Route::get('/changeVerify', 'AdminReportsController@changeVerify');
 });

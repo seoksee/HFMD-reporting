@@ -11463,7 +11463,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 
 .content-wrapper {
   /* background: #f4f6f9; */
-  padding: 0.5rem;  
+  padding: 0.5rem;
 }
 
 .content-wrapper > .content {
@@ -11967,7 +11967,7 @@ body.sidebar-collapse:not(.sidebar-mini-md):not(.sidebar-mini) .main-header::bef
 }
 
 .nav-sidebar .nav-header {
-  font-size: .9rem;
+  font-size: 1.7rem;
   padding: 0.5rem;
 }
 
@@ -17945,6 +17945,8 @@ html.maximized-card {
     margin-right: 10px;
   }
 }
+
+
 
 .card-comments {
   background: #f8f9fa;

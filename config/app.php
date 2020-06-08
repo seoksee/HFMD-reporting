@@ -229,6 +229,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'Form' => Collective\Html\FormFarcade::class,
         'Html' => Collective\Html\HtmlFarcade::class,
+        'Carbon' => 'Carbon\Carbon',
 
     ],
 

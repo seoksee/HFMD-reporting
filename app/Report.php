@@ -19,6 +19,7 @@ class Report extends Model
         'children_in_kindergarten_infected',
         'file',
         'is_approve',
+        'fatal',
     ];
 
     public function user(){

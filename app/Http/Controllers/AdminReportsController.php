@@ -14,7 +14,7 @@ class AdminReportsController extends Controller
      */
     public function index()
     {
-        $reports = Report::paginate(10);
+        $reports = Report::paginate(8);
         // return view('/');
         return view('admin.report', compact('reports'));
     }
@@ -93,6 +93,15 @@ class AdminReportsController extends Controller
         $report->fatal = $request->fatal;
         $report->save();
         // dd($report);
-        return response()->json(['success'=>'Deceased change successfully.']);
+        return response()->json(['success'=>'Deceased changed successfully.']);
+    }
+
+    public function changeVerify(Request $request)
+    {
+        $report = Report::find($request->id);
+        $report->is_approve = $request->is_approve;
+        $report->save();
+        // dd($report);
+        return response()->json(['success' => 'Verify status changed successfully.']);
     }
 }
