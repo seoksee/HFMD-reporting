@@ -62,6 +62,42 @@
                         @enderror
                     </div>
                 </div><!-- end of address input -->
+                <!-- start of postal code input -->
+                <div class="form-group row">
+                    <label for="postal" class="col-md-4 col-form-label text-md-right">{{ __('Postal Code') }}</label>
+                    <div class="col-md-8">
+                        <input id="postal" type="text" class="form-control form-control-user @error('postal') is-invalid @enderror" name="postal" value="{{ old('postal') }}" required autocomplete="postal" placeholder="Postal Code">
+                        @error('postal')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div><!-- end of postal input -->
+                <!-- start of city input -->
+                <div class="form-group row">
+                    <label for="city" class="col-md-4 col-form-label text-md-right">{{ __('City') }}</label>
+                    <div class="col-md-8">
+                        <input id="city" type="text" class="form-control form-control-user @error('city') is-invalid @enderror" name="city" value="{{ old('city') }}" required autocomplete="city" placeholder="City">
+                        @error('city')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div><!-- end of city input -->
+                <!-- start of state input -->
+                <div class="form-group row">
+                    <label for="state" class="col-md-4 col-form-label text-md-right">{{ __('State') }}</label>
+                    <div class="col-md-8">
+                        <input id="state" type="text" class="form-control form-control-user @error('state') is-invalid @enderror" name="state" value="{{ old('state') }}" required autocomplete="state" placeholder="State">
+                        @error('state')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div><!-- end of email input -->
                 <!-- Start of Password input -->
                 <div class="form-group row">
                     <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
