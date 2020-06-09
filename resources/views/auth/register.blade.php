@@ -31,7 +31,7 @@
                     <label for="phone" class="col-md-4 col-form-label text-md-right">{{ __('Phone Number') }}</label>
                     <div class="col-md-8">
                         <input id="phone" type="tel" minlength="10" maxlength="11" class="form-control form-control-user @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone" placeholder="Phone Number">
-                        @error('name')
+                        @error('phone')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
@@ -43,13 +43,25 @@
                     <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Email address') }}</label>
                     <div class="col-md-8">
                         <input id="email" type="email" class="form-control form-control-user @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" placeholder="Email Address">
-                        @error('name')
+                        @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
                     </div>
                 </div><!-- end of email input -->
+                <!-- start of address input -->
+                <div class="form-group row">
+                    <label for="address" class="col-md-4 col-form-label text-md-right">{{ __('Address Line 1') }}</label>
+                    <div class="col-md-8">
+                        <input id="address" type="text" class="form-control form-control-user @error('address') is-invalid @enderror" name="address" value="{{ old('address') }}" required autocomplete="address" placeholder="Home Address">
+                        @error('address')
+                            <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div><!-- end of address input -->
                 <!-- Start of Password input -->
                 <div class="form-group row">
                     <label for="password" class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>

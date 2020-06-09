@@ -98,7 +98,7 @@
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
                 @if(Auth::user()->isAdmin())
-                    <a href="{{route('admin')}}" class="dropdown-item">
+                    <a href="{{route('admin.report.index')}}" class="dropdown-item">
                         <i class="fas fa-users-cog fa-sm fa-fw mr-2 text-gray-400"></i>
                         Go to Admin
                     </a>

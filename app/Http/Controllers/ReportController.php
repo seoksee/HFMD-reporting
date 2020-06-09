@@ -7,6 +7,7 @@ use App\Symptom;
 use Illuminate\Support\Facades\Auth;
 use App\Document;
 use App\Report;
+use Illuminate\Support\Facades\Mail;
 
 class ReportController extends Controller
 {
@@ -19,7 +20,7 @@ class ReportController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function index()
     {
         //
@@ -57,6 +58,16 @@ class ReportController extends Controller
         $input['symptoms'] = $symptom;
         $user->reports()->create($input);
         $message = "Your report has been received and waiting review by an admin.";
+
+        $data = [
+            'title' => 'Submission of report on HFMD reporting system',
+            'content' => 'Your report has been submitted and waiting review by an admin.',
+        ];
+
+        Mail::send('emails.test', $data, function ($message) use ($user) {
+            $message->to($user->email, $user->name)->subject('Reporting on HFMD reporting system');
+        });
+
         return redirect('/')->with('alert', $message);
     }
 

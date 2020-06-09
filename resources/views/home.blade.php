@@ -58,31 +58,7 @@
         </div>
 
         <div class="">
-            <div class="card shadow mb-5">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">This month HFMD Cases Overview</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body row">
-                  <div class="map-area col-md-9">
-                    <iframe style="border: 0ch" src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Blank_malaysia_map.svg" height="100%" width="90%" alt=""></iframe>
-                  </div>
-                  <div class="col-md-3">
-                    <svg width="100" height="250">
-                        <circle cx="10" cy="100" r="10" fill="#c8c8c8" /><text fill="#9FA2B4" font-size="20"  x="30" y="108">0</text>
-                        <circle cx="10" cy="130" r="10" fill="#FAEBD2" /><text fill="#9FA2B4" font-size="20"  x="30" y="138">1-5</text>
-                        <circle cx="10" cy="160" r="10" fill="#E9A188" /><text fill="#9FA2B4" font-size="20"  x="30" y="168">6-10</text>
-                        <circle cx="10" cy="190" r="10" fill="#BB3937" /><text fill="#9FA2B4" font-size="20"  x="30" y="198">11-15</text>
-                        <circle cx="10" cy="220" r="10" fill="#772526" /><text fill="#9FA2B4" font-size="20"  x="30" y="228">>15</text>
-                    </svg>
-
-
-                </div>
-              </div>
-            </div>
-
-              <div class="card shadow mb-4">
+            <div class="card shadow mb-4">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">This month HFMD Cases Overview</h6>
@@ -104,6 +80,30 @@
                           <a class="dropdown-item" href="#">by Year</a>
 
                   </div>
+                </div>
+              </div>
+            </div>
+            <br>
+            <div class="card shadow mb-5">
+                <!-- Card Header - Dropdown -->
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                  <h6 class="m-0 font-weight-bold text-primary">This month HFMD Cases Overview</h6>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body row">
+                  <div class="map-area col-md-9">
+                    <iframe style="border: 0ch" src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Blank_malaysia_map.svg" height="100%" width="90%" alt=""></iframe>
+                  </div>
+                  <div class="col-md-3">
+                    <svg width="100" height="250">
+                        <circle cx="10" cy="100" r="10" fill="#c8c8c8" /><text fill="#9FA2B4" font-size="20"  x="30" y="108">0</text>
+                        <circle cx="10" cy="130" r="10" fill="#FAEBD2" /><text fill="#9FA2B4" font-size="20"  x="30" y="138">1-5</text>
+                        <circle cx="10" cy="160" r="10" fill="#E9A188" /><text fill="#9FA2B4" font-size="20"  x="30" y="168">6-10</text>
+                        <circle cx="10" cy="190" r="10" fill="#BB3937" /><text fill="#9FA2B4" font-size="20"  x="30" y="198">11-15</text>
+                        <circle cx="10" cy="220" r="10" fill="#772526" /><text fill="#9FA2B4" font-size="20"  x="30" y="228">>15</text>
+                    </svg>
+
+
                 </div>
               </div>
             </div>
@@ -157,7 +157,7 @@ var ctx = $('#line-chart');
         {
             labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
             datasets: [{
-                label: 'Data of CMS',
+                label: 'Number of Cases',
                 data:
                 data_month
                 // 1,2,3,4,5,6,7,8,9,1,2

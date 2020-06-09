@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -24,7 +25,16 @@ Route::get('/report/create', 'ReportController@create')->name('report');
 Route::post('/report', 'ReportController@store',['as'=>'report']);
 // Route::patch('/admin/report/{id}', 'ReportController@update');
 
+// Route::get('/admin/mail', function(){
+//     $data = [
+//         'title' => 'Submission of report on HFMD reporting system',
+//         'content' => 'Your report has been submitted and waiting review by an admin.',
+//     ];
 
+//     Mail::send('emails.test', $data, function($message){
+//         $message->to('chunshui7347@gmail.com', 'chunshui')->subject('Reporting on HFMD reporting system');
+//     });
+// });
 
 Route::group(['middleware'=>'admin'], function(){
     Route::get('/admin', 'AdminController@index')->name('admin');
