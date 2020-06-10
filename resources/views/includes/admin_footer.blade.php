@@ -7,7 +7,7 @@
 <!-- jQuery UI 1.11.4 -->
 <script src="{{asset('/jquery-ui/jquery-ui.min.js')}}"></script>
 <script>
-  $.widget.bridge('uibutton', $.ui.button)
+//   $.widget.bridge('uibutton', $.ui.button)
 </script>
 {{-- Bootstrap --}}
 <script src="{{asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>

@@ -43,4 +43,9 @@ Route::group(['middleware'=>'admin'], function(){
     Route::get('/changeVerify', 'AdminReportsController@changeVerify');
     Route::resource('admin/manageUsers', 'AdminManageUsersController', ['as'=>'admin']);
     Route::get('/changeRole', 'AdminManageUsersController@changeRole');
+    Route::resource('admin/symptoms', 'AdminSymptomsController', ['as' => 'admin']);
+    Route::post('/admin/symptoms/getTableData','AdminSymptomsController@getTableData');
+    // Route::get('/admin/symptoms/index', 'AdminSymptomsController@index');
+    Route::post('/admin/symptoms/editData', 'AdminSymptomsController@editData');
+    Route::post('/admin/symptoms/deleteData', 'AdminSymptomsController@deleteData');
 });
