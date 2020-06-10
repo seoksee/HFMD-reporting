@@ -3180,6 +3180,12 @@ fieldset:disabled a.btn {
   width: 100%;
 }
 
+form.user .btn-user {
+    font-size: 1rem;
+    border-radius: 10rem;
+    padding: 0.75rem 1rem;
+}
+
 .btn-block + .btn-block {
   margin-top: 0.5rem;
 }
@@ -5138,8 +5144,9 @@ input[type="button"].btn-block {
 .badge {
   display: inline-block;
   padding: 0.25em 0.4em;
-  font-size: 75%;
-  font-weight: 700;
+  font-size: 100%;
+  font-weight: 500;
+  margin:1%;
   line-height: 1;
   text-align: center;
   white-space: nowrap;

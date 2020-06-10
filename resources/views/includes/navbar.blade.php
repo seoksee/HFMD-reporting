@@ -41,7 +41,7 @@
 
         <!-- Nav Item - Symptoms -->
         <li class="nav-item">
-            <a class="nav-link " href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link " href="{{ url('symptoms') }}" role="button" aria-haspopup="true" aria-expanded="false">
                 <table>
                     <tr>
                         <td>
@@ -61,7 +61,7 @@
 
         <!-- Nav Item - Hospital -->
         <li class="nav-item">
-            <a class="nav-link " href="#" role="button" aria-haspopup="true" aria-expanded="false">
+            <a class="nav-link " href="{{ url('hospitals') }}" role="button" aria-haspopup="true" aria-expanded="false">
                 <table>
                     <tr>
                         <td>

@@ -50,5 +50,11 @@ class HomeController extends Controller
                 ->with('monthlyReports', json_encode($monthlyReports, JSON_NUMERIC_CHECK));
     }
 
+    public function symptoms(){
+        return view('symptoms');
+    }
 
+    public function hospitals(){
+        return view('hospitals');
+    }
 }

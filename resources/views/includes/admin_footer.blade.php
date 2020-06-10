@@ -5,7 +5,7 @@
 <!-- jQuery -->
 <script src="{{asset('js/jquery/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
-<script src="{{asset('/jquery-ui/jquery-ui.min.js')}}"></script>
+{{-- <script src="{{asset('/jquery-ui/jquery-ui.min.js')}}"></script> --}}
 <script>
 //   $.widget.bridge('uibutton', $.ui.button)
 </script>
@@ -35,7 +35,10 @@
 <!-- AdminLTE App -->
 <script src="{{asset('js/adminlte.js')}}"></script>
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('js/pages/dashboard.js')}}"></script>
+{{-- <script src="{{asset('js/pages/dashboard.js')}}"></script> --}}
 <!-- AdminLTE for demo purposes -->
-<script src="dist/js/demo.js"></script>
+{{-- <script src="dist/js/demo.js"></script> --}}
+
+<!--Datatables-->
+
 
