@@ -31,7 +31,27 @@
 <script>
     var symptomsName = <?php echo json_encode($symptomsName); ?>;
     var symptomsCount = <?php echo json_encode($symptomsCount); ?>;
+
     var ctx = document.getElementById('symptomsChart').getContext('2d');
+    var randomColourPlugin = {
+
+        beforeUpdate: function(chart){
+            var backgroundColor = [];
+            var borderColor = [];
+            for(var i=0; i<symptomsCount.length; i++){
+                var colour = "rgba(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255) + ",";
+                backgroundColor.push(colour + "0.2)");
+                borderColor.push(colour + "1)");
+            }
+
+            chart.config.data.datasets[0].backgroundColor = backgroundColor;
+            chart.config.data.datasets[0].borderColor = borderColor;
+        }
+
+    }
+
+    Chart.pluginService.register(randomColourPlugin);
+
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
