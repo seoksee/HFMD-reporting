@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Report;
+use App\Symptom;
 use Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -51,7 +52,27 @@ class HomeController extends Controller
     }
 
     public function symptoms(){
-        return view('symptoms');
+        $data = Report::select('symptoms')->get();
+        $symptoms = Symptom::select('name')->get();
+        $symptomsName = [];
+        foreach ($symptoms as $symptom) {
+            array_push($symptomsName, $symptom->name);
+        }
+        
+        $numOfSymptoms = count($symptoms);
+        for($i=0; $i<$numOfSymptoms; $i++){
+            $symptomsCount[$i] = 0;
+        }
+
+        foreach($data as $row){
+            $count = $row->symptoms;
+            foreach(explode(',', $count) as $id){
+                $symptomsCount[$id-1]++;
+            }
+
+        }
+
+        return view('symptoms', compact('symptomsCount', 'symptomsName'));
     }
 
     public function hospitals(){

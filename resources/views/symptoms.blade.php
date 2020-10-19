@@ -29,14 +29,18 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
+    var symptomsName = <?php echo json_encode($symptomsName); ?>;
+    var symptomsCount = <?php echo json_encode($symptomsCount); ?>;
     var ctx = document.getElementById('symptomsChart').getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: ['Fever', 'Sore Throat', 'Poor Appetite', 'Malaise', 'Red spots on Mouth', 'Red spots on Hand/Wrist', 'Red spots on Feet'],
+            labels: symptomsName,
+            // labels: ['Fever', 'Sore Throat', 'Poor Appetite', 'Malaise', 'Red spots on Mouth', 'Red spots on Hand/Wrist', 'Red spots on Feet'],
             datasets: [{
                 label: 'Occurence of symptoms',
-                data: [10, 2, 1, 3, 9, 10, 8],
+                // data: [10, 2, 1, 3, 9, 10, 8],
+                data: symptomsCount,
                 backgroundColor: [
                     'rgba(255, 99, 132, 0.2)',
                     'rgba(54, 162, 235, 0.2)',
