@@ -43,6 +43,7 @@ Route::group(['middleware'=>'admin'], function(){
     Route::resource('admin/report', 'AdminReportsController',['as'=>'admin']);
     Route::get('/changeFatal', 'AdminReportsController@changeFatal');
     Route::get('/changeVerify', 'AdminReportsController@changeVerify');
+    Route::post('/admin/reports/deleteData', 'AdminReportsController@deleteData');
 
     Route::resource('admin/manageUsers', 'AdminManageUsersController', ['as'=>'admin']);
     Route::get('/changeRole', 'AdminManageUsersController@changeRole');

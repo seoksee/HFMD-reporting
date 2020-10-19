@@ -28,7 +28,7 @@ class CreateReportsTable extends Migration
             $table->integer('attend_kindergarten');
             $table->string('kindergarten_location')->nullable();
             $table->integer('children_in_kindergarten_infected')->nullable();
-            $table->string('file')->nullable();
+            $table->string('document_id')->nullable();
             $table->timestamps();
         });
     }

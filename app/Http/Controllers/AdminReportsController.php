@@ -57,7 +57,10 @@ class AdminReportsController extends Controller
      */
     public function show($id)
     {
-        //
+        $report = Report::findOrFail($id);
+        $symptoms = Symptom::get();
+        // dd($report->document);
+        return view('admin.reports.show', compact('report', 'symptoms'));
     }
 
     /**
@@ -68,7 +71,7 @@ class AdminReportsController extends Controller
      */
     public function edit($id)
     {
-        //
+
     }
 
     /**
@@ -93,7 +96,15 @@ class AdminReportsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $report = Report::findOrFail($id);
+        if($report->document){
+            unlink(public_path().$report->document->file);
+        }
+        dd($report);
+        $report->delete();
+        $message = "Report $id is deleted.";
+
+        return redirect()->back()->with('alert', $message);
     }
 
     public function changeFatal(Request $request)
@@ -112,5 +123,12 @@ class AdminReportsController extends Controller
         $report->save();
         // dd($report);
         return response()->json(['success' => 'Verify status changed successfully.']);
+    }
+
+    public function deleteData(Request $request)
+    {
+        $report_id = $request->report_id;
+        $report = Report::find($report_id)->delete();
+        return response()->json(['success' => 'Symptom deleted successfully.']);
     }
 }

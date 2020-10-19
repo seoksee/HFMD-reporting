@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Document;
 use App\Report;
 use Illuminate\Support\Facades\Mail;
+use App\State;
+use App\District;
+use Carbon\Carbon;
 
 class ReportController extends Controller
 {
@@ -34,7 +37,9 @@ class ReportController extends Controller
     public function create()
     {
         $symptoms = Symptom::get();
-        return view('report', compact('symptoms'));
+        $states = State::get();
+        $districts = District::get();
+        return view('report', compact('symptoms','states','districts'));
     }
 
     /**
@@ -47,7 +52,7 @@ class ReportController extends Controller
     {
         $input = $request->all();
         $user = Auth::user();
-        if($file = $request->file('document')){
+        if($file = $request->file('document_id')){
             $name = time().$file->getClientOriginalName();
             $file->move('documents', $name);
             $document = Document::create(['file'=>$name]);
@@ -56,6 +61,13 @@ class ReportController extends Controller
         $symptoms = $request->symptoms;
         $symptom = join(",", $symptoms);
         $input['symptoms'] = $symptom;
+        $DOB = $request->DOB;
+        $age = Carbon::parse($DOB)->diff(Carbon::now())->format('%y years, %m months and %d days');
+        $input['age'] = $age;
+        if($request->children_infected == 0){
+            $input['children_in_kindergarten_infected'] = 0;
+        }
+        // dd($request->children_in_kindergarten_infected);
         $user->reports()->create($input);
         $message = "Your report has been received and waiting review by an admin.";
 

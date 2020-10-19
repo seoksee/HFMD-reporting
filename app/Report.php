@@ -8,16 +8,19 @@ class Report extends Model
 {
     protected $fillable = [
         'DOB',
+        'age',
         'relationship',
         'symptoms',
         'other_symptoms',
         'diagnosis',
         'hospital_admission',
-        'residential',
+        'residential_state_id',
+        'residential_district_id',
         'attend_kindergarten',
-        'kindergarten_location',
+        'kindergarten_state_id',
+        'kindergarten_district_id',
         'children_in_kindergarten_infected',
-        'file',
+        'document_id',
         'is_approve',
         'fatal',
     ];

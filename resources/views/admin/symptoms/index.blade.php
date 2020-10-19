@@ -156,7 +156,10 @@
 
     $('#data-table').on('click', '.deleteSymptom', function () {
         var symptom_id = $(this).data("id");
-        confirm("Are You sure want to delete !");
+        var confirmation = confirm("Are You sure want to delete !");
+        if(confirmation == false) {
+            return false;
+        }
 
         $.ajax({
             data: {
