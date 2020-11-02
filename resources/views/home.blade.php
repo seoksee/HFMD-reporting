@@ -92,9 +92,11 @@
                 <!-- Card Body -->
                 <div class="card-body row">
                   <div class="map-area col-md-9">
-                    <iframe style="border: 0ch" src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Blank_malaysia_map.svg" height="100%" width="90%" alt=""></iframe>
+                      <div height="100%" id="map"></div>
+                    {{-- <iframe style="border: 0ch" src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Blank_malaysia_map.svg" height="100%" width="90%" alt=""></iframe> --}}
                   </div>
                   <div class="col-md-3">
+
                     <svg width="100" height="250">
                         <circle cx="10" cy="100" r="10" fill="#c8c8c8" /><text fill="#9FA2B4" font-size="20"  x="30" y="108">0</text>
                         <circle cx="10" cy="130" r="10" fill="#FAEBD2" /><text fill="#9FA2B4" font-size="20"  x="30" y="138">1-5</text>
@@ -146,9 +148,9 @@ var lineChartData = {
         data: data_month
     }]
 };
-console.log(month);
-console.log(data_month);
-console.log(lineChartData);
+// console.log(month);
+// console.log(data_month);
+// console.log(lineChartData);
 var ctx = $('#line-chart');
     var myChart = new Chart(ctx, {
         type: 'line',
@@ -192,4 +194,29 @@ var ctx = $('#line-chart');
         }
     });
 </script>
+
+<script>
+    var cases_in_states = <?php echo $cases_in_states; ?>;
+    var cases_object = {
+
+    };
+
+    function check_color (value){
+        if(value > 15){
+            return "#772526";
+        } else if(value > 10){
+            return "#BB3937";
+        } else if(value > 5){
+            return "#E9A188";
+        } else if(value > 0){
+            return "#FAEBD2";
+        } else {
+            return "#c8c8c8";
+        }
+    }
+    console.log(cases_object);
+</script>
+
+<script type="text/javascript" src="js/mapdata.js"></script>
+<script  type="text/javascript" src="js/countrymap.js"></script>
 @endsection

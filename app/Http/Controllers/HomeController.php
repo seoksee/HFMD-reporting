@@ -47,8 +47,26 @@ class HomeController extends Controller
                                 ->get()->toArray();
         $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
 
+
+        //getting verified reports
+        $verified_reports = Report::whereMonth('created_at', '=', Carbon::now()->month)
+                    ->whereYear('created_at','=', Carbon::now()->year)
+                    ->where(['is_approve' => 1])->get();
+        $cases_in_states = [];
+        for($i=0; $i<=16; $i++){
+            $cases_in_states[$i] = 0;
+        }
+        foreach ($verified_reports as $report){
+            // dd($report->residential_state_id);
+            for ($i = 0; $i <= 16; $i++) {
+                if($report->residential_state_id == $i){
+                    $cases_in_states[$i]++;
+                }
+            }
+        }
+        // dd($cases_in_states);
         return view('home', compact('reports', 'fatal'))
-                ->with('monthlyReports', json_encode($monthlyReports, JSON_NUMERIC_CHECK));
+                ->with(['monthlyReports'=> json_encode($monthlyReports, JSON_NUMERIC_CHECK),'cases_in_states' => json_encode($cases_in_states)]);
     }
 
     public function symptoms(){
@@ -58,7 +76,7 @@ class HomeController extends Controller
         foreach ($symptoms as $symptom) {
             array_push($symptomsName, $symptom->name);
         }
-        
+
         $numOfSymptoms = count($symptoms);
         for($i=0; $i<$numOfSymptoms; $i++){
             $symptomsCount[$i] = 0;
@@ -78,4 +96,5 @@ class HomeController extends Controller
     public function hospitals(){
         return view('hospitals');
     }
+
 }
