@@ -6166,6 +6166,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
   .modal-dialog {
     max-width: 500px;
     margin: 1.75rem auto;
+    height: 600px;
   }
   .modal-dialog-scrollable {
     max-height: calc(100% - 3.5rem);
@@ -6181,6 +6182,7 @@ a.close.disabled, a.disabled.mailbox-attachment-close {
   }
   .modal-content {
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.5);
+    height: 600px;
   }
   .modal-sm {
     max-width: 300px;
