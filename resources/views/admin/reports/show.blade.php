@@ -8,7 +8,7 @@
 
             <div class="form-group row">
                 <div class="col-sm-3">
-                    <img src="{{$report->document ? $report->document->file : ''}}" alt="" class="img-responsive">
+                    {{-- <img src="{{$report->document ? $report->document->file : ''}}" alt="" class="img-responsive"> --}}
                 </div>
                 <div class="col-sm-9 row">
                     <div class="col-sm-3 text-md-right">
@@ -61,7 +61,24 @@
                     </div><div class="col-sm-6">
                         <h5>{{$report->children_in_kindergarten_infected ? $report->children_in_kindergarten_infected : '-'}}</h5>
                     </div>
+                    <div class="col-sm-6">
+                        {!! $report->document ? "<button class='btn btn-primary float-right' id='viewFileButton'>View File</button>" : "<p class='float-right'>No document proof provided</p>" !!}
+                    </div>
+                    <div id="viewFileModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Document Proof</h4>
+                                    <button class="close" type="button" data-dismiss="modal">&times;</button>
+                                </div>
+                                <div class="modal-body">
+                                    <img src="{{$report->document ? $report->document->file : ''}}" alt="" class="img-responsive">
+                                    <embed src="{{$report->document ? $report->document->file : ''}}" type="" height="500px" width="100%">
+                                </div>
+                            </div>
+                        </div>
 
+                    </div>
                 </div>
             </div>
             {{-- <div class="col-sm-10">
@@ -74,5 +91,10 @@
 
     </div>
 
+    <script>
+        $('#viewFileButton').click(function(){
+            $('#viewFileModal').modal();
+        });
+    </script>
 
 @endsection

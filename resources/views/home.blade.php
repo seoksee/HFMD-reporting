@@ -196,10 +196,7 @@ var ctx = $('#line-chart');
 </script>
 
 <script>
-    var cases_in_states = <?php echo $cases_in_states; ?>;
-    var cases_object = {
-
-    };
+    var cases_in_states = <?php echo $cases_in_states; ?>
 
     function check_color (value){
         if(value > 15){
@@ -214,7 +211,7 @@ var ctx = $('#line-chart');
             return "#c8c8c8";
         }
     }
-    console.log(cases_object);
+
 </script>
 
 <script type="text/javascript" src="js/mapdata.js"></script>
