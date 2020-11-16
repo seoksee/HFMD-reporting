@@ -35,7 +35,6 @@ class AdminSymptomsController extends Controller
     }
 
     public function getTableData(Request $request){
-            // dd("DSAF");
             $data = Symptom::latest()->get();
             return Datatables::of($data)
                 ->addIndexColumn()
@@ -94,7 +93,7 @@ class AdminSymptomsController extends Controller
      */
     public function edit($id)
     {
-       
+
     }
 
     public function editData(Request $request){

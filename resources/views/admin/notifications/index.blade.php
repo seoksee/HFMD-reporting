@@ -6,21 +6,20 @@
             <h1 class="m-0 text-dark">Notifications</h1>
         </div>
 
-        <a class="btn btn-success float-right" style="margin:0.5%" href="{{route('admin.notifications.create')}}" id="createNewSymptom"> Create New Notification</a>
-
-        <table class="table" id="data-table">
+        {{-- <a class="btn btn-success float-right" style="margin:0.5%" href="{{route('admin.notifications.create')}}" id="createNewSymptom"> Create New Notification</a> --}}
+        <a class="btn btn-success float-right" href="javascript:void(0)" id="createNewNotification"> Create New Notification</a>
+        <table class="table" id="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Title</th>
-                    <th>Created By</th>
-                    <th>Created Date</th>
-                    <th>Schedule Date</th>
+                    <th>Recipients</th>
+                    <th>Message</th>
                     <th>Status</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
+                {{-- <tr>
                     <td>1</td>
                     <td><a href="#">New Confirmed Case at Petaling Jaya</a></td>
                     <td>Tan Seok See</td>
@@ -51,9 +50,44 @@
                     <td>2020-06-06</td>
                     <td>2020-06-06 12:00</td>
                     <td class="badge badge-pill bg-primary">Posted</td>
-                </tr>
+                </tr> --}}
             </tbody>
         </table>
 
     </div>
+@endsection
+
+@section('scripts')
+    <script>
+        var table = $('#table').DataTable({
+        processing: true,
+        serverSide: true,
+        // ajax: "{{ route('admin.notifications.index') }}",
+        ajax: {
+            url: "/admin/notifications/getTableData",
+            dataType: "json",
+            type: "POST",
+            data: {
+                _token: "{{csrf_token()}}",
+                // _token: $("._token").val(),
+            }
+        },
+        columns: [
+            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'recipients', name: 'recipients'},
+            {data: 'content', name: 'content'},
+            {data: 'when_to_send',
+            render: function(data, type, row) {
+                if(data > "{{Carbon\Carbon::now()}}") {
+                    return '<span class="badge badge-pill bg-danger">Scheduled</span>';
+
+                } else {
+                    return '<span class="badge badge-pill bg-primary">Posted</span>';
+                }
+            }},
+            {data: 'action', name: 'action', orderable: false, searchable: false},
+        ]
+    });
+    console.log(table);
+    </script>
 @endsection

@@ -8,8 +8,10 @@ use Illuminate\Support\Facades\Auth;
 use NotificationChannels\Twilio\TwilioChannel;
 use NotificationChannels\Twilio\TwilioSmsMessage;
 use App\Notification;
+use App\Symptom;
 use App\User;
 use Illuminate\Support\Facades\DB;
+use DataTables;
 
 class AdminNotificationsController extends Controller
 {
@@ -18,7 +20,7 @@ class AdminNotificationsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         return view('admin.notifications.index');
     }
@@ -128,16 +130,29 @@ class AdminNotificationsController extends Controller
         );
     }
 
-    public function sendCustomMessage(Request $request)
-    {
-        $validatedData = $request->validate([
-            'users' => 'required|array',
-            'message' => 'required'
-        ]);
-        $recipients = $validatedData["users"];
-        foreach($recipients as $recipient) {
-            $this->sendMessage($validatedData["body"], $recipient);
-        }
-        return back()->with(['success' => "Messages on their way!"]);
+    // public function sendCustomMessage(Request $request)
+    // {
+    //     $validatedData = $request->validate([
+    //         'users' => 'required|array',
+    //         'message' => 'required'
+    //     ]);
+    //     $recipients = $validatedData["users"];
+    //     foreach($recipients as $recipient) {
+    //         $this->sendMessage($validatedData["body"], $recipient);
+    //     }
+    //     return back()->with(['success' => "Messages on their way!"]);
+    // }
+
+
+    public function getTableData(Request $request) {
+        $data = Notification::latest()->get();
+        return Datatables::of($data)
+            ->addIndexColumn()
+            ->addColumn('action', function ($row) {
+            $btn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
+                return $btn;
+            })
+            ->rawColumns(['action'])
+            ->make(true);
     }
 }
