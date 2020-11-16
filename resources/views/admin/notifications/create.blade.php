@@ -15,8 +15,8 @@
                 <span class="col-form-label"><strong>:</strong></span>
                 <div class="col-md-6 ">
 
-                    <select name="users[]" id="" class="custom-select" >
-                        <option value="+60166328488">All Users</option>
+                    <select name="users" id="" class="custom-select" >
+                        <option value="all">All Users</option>
                         <option value="selangor">Users in Selangor</option>
                         <option value="johor">Users in Johor</option>
                         <option value="penang">Users in Penang</option>

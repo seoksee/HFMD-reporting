@@ -9,6 +9,7 @@ use NotificationChannels\Twilio\TwilioChannel;
 use NotificationChannels\Twilio\TwilioSmsMessage;
 use App\Notification;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class AdminNotificationsController extends Controller
 {
@@ -42,27 +43,29 @@ class AdminNotificationsController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'users' => 'required|array',
+            'users' => 'required',
             'message' => 'required'
         ]);
-        $recipients = $validatedData["users"];
+        if($request->users == "all") {
+            // $recipients = User::select('phone')->get();
+            $recipients = DB::table('users')->select('phone')->get();
+        } else {
+            $recipients = DB::table('users')->select('phone')->where('state', '=', $request->users)->get();
+        }
+        // dd($recipients);
+        // $recipients = $validatedData["users"];
         foreach ($recipients as $recipient) {
-            // $this->sendMessage($validatedData["message"], $recipient);
+            // dd($recipient);
+            $this->sendMessage($validatedData["message"], $recipient->phone);
         }
 
         $input = $request->all();
-        $recipientsDB = implode(', ', $request->users);
-        $input['recipients'] = $recipientsDB;
+        // $recipientsDB = implode(', ', $request->users);
+        $input['recipients'] = $request->users;
         $input['content'] = $request->message;
         $input['when_to_send'] = $request->date;
         $admin = Auth::user();
         $admin->notifications()->create($input);
-        // Notification::updateOrCreate(
-        //     ['recipients' => $recipientsDB],
-        //     ['content' => $request->message],
-        //     ['when_to_send' => $request->date],
-        //     ['created_by' => Auth::user()->name]
-        // );
 
         $message = "Your notification has been created successfully.";
         return redirect('/admin/notifications')->with('alert', $message);
