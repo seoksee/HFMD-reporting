@@ -75,7 +75,6 @@
                     </button>
                         <div class="dropdown-menu dropdown-menu-right animated--fade-in" aria-labelledby="navbarDropdown">
                           <a class="dropdown-item" href="#">by Day</a>
-                          <a class="dropdown-item" href="#">by Week</a>
                           <a class="dropdown-item" href="#">by Month</a>
                           <a class="dropdown-item" href="#">by Year</a>
 
@@ -84,7 +83,7 @@
               </div>
             </div>
             <br>
-            <div class="card shadow mb-5">
+            <div class="card shadow">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                   <h6 class="m-0 font-weight-bold text-primary">This month HFMD Cases Overview</h6>

@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
         "laravelcollective/html": "^6.1",
+        "nexmo/laravel": "^2.3",
         "yajra/laravel-datatables-oracle": "^9.10"
     },
     "require-dev": {
