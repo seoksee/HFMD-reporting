@@ -61,13 +61,19 @@ class AdminNotificationsController extends Controller
             // $this->sendMessage($validatedData["message"], $recipient->phone);
         }
 
-        $input = $request->all();
+        // $input = $request->all();
         // $recipientsDB = implode(', ', $request->users);
+
+        $input['id'] = $request->notification_id;
         $input['recipients'] = $request->users;
         $input['content'] = $request->message;
         $input['when_to_send'] = $request->date;
+
         $admin = Auth::user();
-        $admin->notifications()->create($input);
+        // $input['user_id'] = $admin->id;
+        $admin->notifications()->updateOrCreate(["id" => $input['id']], ["recipients" => $request->users ,
+        "content" => $request->message, "when_to_send" => $request->date]);
+        // Notification::updateOrCreate($input);
 
         $message = "Your notification has been created successfully.";
         // return redirect('/admin/notifications')->with('alert', $message);
@@ -94,6 +100,23 @@ class AdminNotificationsController extends Controller
     public function edit($id)
     {
         //
+    }
+
+    public function editData(Request $request)
+    {
+        $notification_id = $request->notification_id;
+        $notification = Notification::find($notification_id);
+        $recipients = $notification->recipients;
+        $content = $notification->content;
+        $when_to_send = $notification->when_to_send;
+        $data = [
+            'notification_id' => $notification_id,
+            'users' => $recipients,
+            'message' => $content,
+            'date' => $when_to_send
+        ];
+        // dd($data);
+        return response()->json($data);
     }
 
     /**
@@ -149,11 +172,13 @@ class AdminNotificationsController extends Controller
         $data = Notification::latest()->get();
         return Datatables::of($data)
             ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-            $btn = '<a href="javascript:void(0)" class="edit btn btn-success btn-sm">Edit</a> <a href="javascript:void(0)" class="delete btn btn-danger btn-sm">Delete</a>';
-                return $btn;
-            })
-            ->rawColumns(['action'])
+            // ->addColumn('action', function ($row) {
+            // $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editNotification">Edit</a>';
+            // $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteNotification">Delete</a>';
+            // return $btn;
+            //     return $btn;
+            // })
+            // ->rawColumns(['action'])
             ->make(true);
     }
 }

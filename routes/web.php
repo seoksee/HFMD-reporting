@@ -55,4 +55,6 @@ Route::group(['middleware'=>'admin'], function(){
 
     Route::resource('/admin/notifications', 'AdminNotificationsController', ['as' => 'admin']);
     Route::post('/admin/notifications/getTableData', 'AdminNotificationsController@getTableData');
+    Route::post('/admin/notifications/editData', 'AdminNotificationsController@editData');
+    // Route::post('/admin/notifications/deleteData', 'AdminNotificationsController@deleteData');
 });

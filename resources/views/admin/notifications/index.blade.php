@@ -14,6 +14,7 @@
                     <th>ID</th>
                     <th>Recipients</th>
                     <th>Message</th>
+                    <th>Notification Date & Time</th>
                     <th>Status</th>
                     <th>Action</th>
                 </tr>
@@ -69,7 +70,7 @@
 
                             <div class="col-sm-12 ">
 
-                                <select name="users" id="" class="custom-select" >
+                                <select name="users" id="users" class="custom-select" >
                                     <option value="all">All Users</option>
                                     <option value="selangor">Users in Selangor</option>
                                     <option value="johor">Users in Johor</option>
@@ -82,7 +83,7 @@
                         <div class="form-group">
                             <label for="date" class="col-sm-5 control-label">When to send</label>
                             <div class="col-sm-12">
-                                <input type="datetime-local" class="form-control" name="date" id="date" required>
+                                <input type="datetime-local" class="form-control" name="date" id="date" required >
                             </div>
                         </div>
 
@@ -123,16 +124,30 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'recipients', name: 'recipients'},
             {data: 'content', name: 'content'},
+            {data: 'when_to_send', name: 'when_to_send'},
             {data: 'when_to_send',
             render: function(data, type, row) {
                 if(data > "{{Carbon\Carbon::now()}}") {
                     return '<span class="badge badge-pill bg-danger">Scheduled</span>';
 
                 } else {
-                    return '<span class="badge badge-pill bg-primary">Posted</span>';
+                    return '<span class="badge badge-pill bg-info">Posted</span>';
                 }
             }},
-            {data: 'action', name: 'action', orderable: false, searchable: false},
+            // {data: 'action', name: 'action', orderable: false, searchable: false},
+            {data: 'when_to_send',
+                render: function(data, type, row) {
+                    if(data > "{{Carbon\Carbon::now()}}") {
+                        var btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' + row.id + '" data-original-title="Edit" class="edit btn btn-primary btn-sm editNotification">Edit</a>';
+                        btn = btn + ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' + row.id + '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteNotification">Delete</a>';
+                        return btn;
+                    } else {
+                        var btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' + row.id + '" data-original-title="Edit" class="edit btn btn-secondary btn-sm editNotification disabled">Edit</a>';
+                        btn = btn + ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' + row.id + '" data-original-title="Delete" class="delete btn btn-secondary btn-sm deleteNotification disabled">Delete</a>';
+                        return btn;
+                    }
+                }
+            }
         ]
     });
     // console.log(table);
@@ -166,6 +181,37 @@
             }
         });
     });
+
+    $('#table').on('click', '.editNotification', function() {
+        var notification_id = $(this).data('id');
+        console.log("id: " , notification_id);
+        $.ajax ({
+            data: {
+                _token: $("._token").val(),
+                notification_id: notification_id,
+            },
+            url: "/admin/notifications/editData",
+            type: "POST",
+            dataType: 'json',
+            success: function (response) {
+                $('#modalHeading').html("Edit Notification");
+                $('#saveBtn').val("edit-notification");
+                $('#ajaxModel').modal('show');
+                $('#notification_id').val(response.notification_id);
+                $('#users').val(response.users);
+
+                $('#date').val(new Date(Date.parse(response.date)+(8*60*60*1000)).toISOString().split('.')[0]);
+                $('#message').val(response.message);
+                console.log(new Date(Date.parse(response.date)).toISOString().split('.')[0]);
+                console.log(response);
+            },
+            error: function (data) {
+                console.log('Error:',  data);
+            }
+        });
+    });
+
+    
 
     </script>
 @endsection

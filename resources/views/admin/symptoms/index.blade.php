@@ -123,7 +123,7 @@
                 $('#ajaxModel').modal('show');
                 $('#symptom_id').val(data.name.id);
                 $('#name').val(data.name.name);
-            // console.log(data);
+            console.log(data);
             },
             error: function (data) {
                 console.log('Error:', data);
