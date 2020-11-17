@@ -58,7 +58,7 @@ class AdminNotificationsController extends Controller
         // $recipients = $validatedData["users"];
         foreach ($recipients as $recipient) {
             // dd($recipient);
-            $this->sendMessage($validatedData["message"], $recipient->phone);
+            // $this->sendMessage($validatedData["message"], $recipient->phone);
         }
 
         $input = $request->all();
