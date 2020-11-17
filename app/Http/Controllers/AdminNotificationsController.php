@@ -142,6 +142,13 @@ class AdminNotificationsController extends Controller
         //
     }
 
+    public function deleteData(Request $request)
+    {
+        $notification_id = $request->notification_id;
+        $notification = Notification::find($notification_id)->delete();
+        return response()->json(['success' => 'Notification deleted successfully.']);
+    }
+
     private function sendMessage($message, $recipients)
     {
         $account_sid = getenv("TWILIO_SID");

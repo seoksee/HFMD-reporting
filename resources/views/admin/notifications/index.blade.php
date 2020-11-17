@@ -211,7 +211,30 @@
         });
     });
 
-    
+    $('table').on('click', '.deleteNotification', function () {
+        var notification_id = $(this).data("id");
+        var confirmation = confirm("Are you sure to delete notification?");
+        if(confirmation == false) {
+            return false;
+        }
+
+        $.ajax({
+            data: {
+                _token: $("._token").val(),
+                notification_id: notification_id,
+            },
+            type: "POST",
+            url: "/admin/notifications/deleteData",
+            dataType: 'json',
+            success: function (data) {
+                console.log(data);
+                table.draw();
+            },
+            error: function (data) {
+                console.log('Error:', data);
+            }
+        });
+    });
 
     </script>
 @endsection
