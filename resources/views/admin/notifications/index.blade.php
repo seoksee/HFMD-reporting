@@ -6,8 +6,8 @@
             <h1 class="m-0 text-dark">Notifications</h1>
         </div>
 
-        <a class="btn btn-success float-right" style="margin:0.5%" href="{{route('admin.notifications.create')}}" id="createNewSymptom"> Create New Notification</a>
-        {{-- <a class="btn btn-success float-right" href="javascript:void(0)" id="createNewNotification"> Create New Notification</a> --}}
+        {{-- <a class="btn btn-success float-right" style="margin:0.5%" href="{{route('admin.notifications.create')}}" id="createNewSymptom"> Create New Notification</a> --}}
+        <a class="btn btn-success float-right" href="javascript:void(0)" id="createNewNotification"> Create New Notification</a>
         <table class="table" id="table">
             <thead>
                 <tr>
@@ -150,8 +150,8 @@
         $(this).html('Sending...');
 
         $.ajax({
-            data: $('#symptomForm').serialize(),
-            url: "{{ route('admin.notifications.store') }}",
+            data: $('#notificationForm').serialize(),
+            url: "{{route('admin.notifications.store')}}",
             type: "POST",
             dataType: 'json',
             success: function(data) {
@@ -161,6 +161,7 @@
                 table.draw();
             },
             error: function (data) {
+                console.log("Error:" , data);
                 $('#saveBtn').html('Save Changes');
             }
         });

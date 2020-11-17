@@ -70,8 +70,8 @@ class AdminNotificationsController extends Controller
         $admin->notifications()->create($input);
 
         $message = "Your notification has been created successfully.";
-        return redirect('/admin/notifications')->with('alert', $message);
-        // return response()->json(['success' => 'Notification created successfully.']);
+        // return redirect('/admin/notifications')->with('alert', $message);
+        return response()->json(['success' => 'Notification created successfully.']);
     }
 
     /**
