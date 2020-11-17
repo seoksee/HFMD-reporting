@@ -18,7 +18,7 @@ class CreateNotificationsTable extends Migration
             $table->integer('user_id')->unsigned();
             $table->string('recipients');
             $table->string('content');
-            $table->date('when_to_send');
+            $table->dateTime('when_to_send');
             $table->timestamps();
         });
     }

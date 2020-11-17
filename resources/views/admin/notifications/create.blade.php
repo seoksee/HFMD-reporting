@@ -29,7 +29,7 @@
                 <label for="date" class="col-md-5 col-form-label text-md-right">{{ __('When to send') }}</label>
                 <span class="col-form-label"><strong>:</strong></span>
                 <div class="col-md-6">
-                    <input type="date" id="date" class="form-control" name="date" value="{{ old('date') }}" required autofocus>
+                    <input type="dateTime-local" id="date" class="form-control" name="date" value="{{ old('date') }}" required autofocus>
                 </div>
             </div>
             {{-- <div class="form-group row">
