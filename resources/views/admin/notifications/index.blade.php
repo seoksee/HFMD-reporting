@@ -54,6 +54,53 @@
             </tbody>
         </table>
 
+        <div class="modal fade" id="ajaxModel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="modalHeading"></h4>
+                    </div>
+                    <div class="modal-body">
+                        <form id="notificationForm" class="form-horizontal">
+                        <input type="hidden" name="_token" class="_token" value="{{ csrf_token() }}">
+                        <input type="hidden" name="notification_id" id="notification_id">
+                        <div class="form-group">
+                            <label for="users" class="col-sm-5 col-form-label">{{ __('Send to') }}</label>
+
+                            <div class="col-sm-12 ">
+
+                                <select name="users" id="" class="custom-select" >
+                                    <option value="all">All Users</option>
+                                    <option value="selangor">Users in Selangor</option>
+                                    <option value="johor">Users in Johor</option>
+                                    <option value="penang">Users in Penang</option>
+                                    <option value="perak">Users in Perak</option>
+                                    <option value="sarawak">Users in Sarawak</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="date" class="col-sm-5 control-label">When to send</label>
+                            <div class="col-sm-12">
+                                <input type="datetime-local" class="form-control" name="date" id="date" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" class="col-sm-5 control-label">Message</label>
+                            <div class="col-sm-12">
+                                <textarea name="message" id="message" class="form-control" rows="3" placeholder="Type your message here" required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-offset-2">
+                            <button type="submit" class="btn btn-primary float-right" id="saveBtn" value="create">Save Changes</button>
+                        </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endsection
 
@@ -88,6 +135,36 @@
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
-    console.log(table);
+    // console.log(table);
+
+    $('#createNewNotification').click(function() {
+        $('#saveBtn').val("create-notification");
+        $('#notification_id').val('');
+        $('#notificationForm').trigger("reset");
+        $('#modalHeading').html("Create New Notification");
+        $('#ajaxModel').modal('show');
+    });
+
+    $('#saveBtn').click(function (e) {
+        e.preventDefault();
+        $(this).html('Sending...');
+
+        $.ajax({
+            data: $('#symptomForm').serialize(),
+            url: "{{ route('admin.notifications.store') }}",
+            type: "POST",
+            dataType: 'json',
+            success: function(data) {
+                $('#notificationForm').trigger("reset");
+                $('#ajaxModel').modal('hide');
+                $('#saveBtn').html('Save Changes');
+                table.draw();
+            },
+            error: function (data) {
+                $('#saveBtn').html('Save Changes');
+            }
+        });
+    });
+
     </script>
 @endsection
