@@ -1,6 +1,11 @@
 @extends('layouts.admin')
 
 @section('content')
+@if(Session::has('alert'))
+    <script type="text/javascript">
+        alert("{{ Session::get('alert') }}");
+    </script>
+@endif
     <div class="content-wrapper">
         <div class="content-header container-fluid mb-2">
             <h1 class="m-0 text-dark">Notifications</h1>

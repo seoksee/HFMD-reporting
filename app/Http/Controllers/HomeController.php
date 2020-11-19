@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Report;
 use App\Symptom;
-use Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
@@ -37,6 +37,28 @@ class HomeController extends Controller
                 ->whereYear('created_at', '=', Carbon::now()->year)
                 ->where(['is_approve' => 1, 'fatal' => 1])->get();
 
+        //daily reports for line chart
+        $dailyReportsQuery = DB::table('reports')
+                                ->select(DB::raw("DAY(created_at) as day, MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+                                ->where('is_approve', 1)
+                                ->having('year', Carbon::now()->year)
+                                ->having('month', Carbon::now()->month)
+                                ->groupBy('year')
+                                ->groupBy('month')
+                                ->groupBy('day')
+                                ->get()->toArray();
+        $dailyReports = array_column($dailyReportsQuery, 'numberOfCases', 'day');
+
+        //weekly reports for line chart
+        $weeklyReportsQuery = DB::table('reports')
+                                ->select(DB::raw("WEEKOFYEAR(created_at) as week, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+                                ->where('is_approve', 1)
+                                ->having('year', Carbon::now()->year)
+                                ->groupBy('year')
+                                ->groupBy('week')
+                                ->get()->toArray();
+        $weeklyReports = array_column($weeklyReportsQuery, 'numberOfCases', 'week');
+
         //monthlyreports for line chart
         $monthlyReportsQuery = DB::table('reports')
                                 ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
@@ -47,7 +69,15 @@ class HomeController extends Controller
                                 ->get()->toArray();
         $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
 
-
+        //yearly reports for line chart
+        $yearlyReportsQuery = DB::table('reports')
+                            ->select(DB::raw("YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+                            ->where('is_approve', 1)
+                            ->having('year', '<=', Carbon::now()->year)
+                            ->having('year', '>', Carbon::now()->year-10)
+                            ->groupBy('year')
+                            ->get()->toArray();
+        $yearlyReports = array_column($yearlyReportsQuery, 'numberOfCases', 'year');
         //getting verified reports
         $verified_reports = Report::whereMonth('created_at', '=', Carbon::now()->month)
                     ->whereYear('created_at','=', Carbon::now()->year)
@@ -66,7 +96,11 @@ class HomeController extends Controller
         }
         // dd($cases_in_states);
         return view('home', compact('reports', 'fatal'))
-                ->with(['monthlyReports'=> json_encode($monthlyReports, JSON_NUMERIC_CHECK),'cases_in_states' => json_encode($cases_in_states)]);
+                ->with(['dailyReports' => json_encode($dailyReports, JSON_NUMERIC_CHECK),
+                        'weeklyReports' => json_encode($weeklyReports, JSON_NUMERIC_CHECK),
+                        'monthlyReports'=> json_encode($monthlyReports, JSON_NUMERIC_CHECK),
+                        'yearlyReports' => json_encode($yearlyReports, JSON_NUMERIC_CHECK),
+                        'cases_in_states' => json_encode($cases_in_states)]);
     }
 
     public function symptoms(){
