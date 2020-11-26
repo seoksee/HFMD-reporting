@@ -88,7 +88,7 @@
                         <div class="form-group">
                             <label for="date" class="col-sm-5 control-label">When to send</label>
                             <div class="col-sm-12">
-                                <input type="datetime-local" class="form-control" name="date" id="date" required >
+                            <input type="datetime-local" class="form-control" name="date" id="date" min="{{Carbon::now()->addMinute()->isoFormat('YYYY-MM-DD[T]HH:mm')}}" required >
                             </div>
                         </div>
 

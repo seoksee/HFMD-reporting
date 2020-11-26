@@ -10,8 +10,11 @@ use NotificationChannels\Twilio\TwilioSmsMessage;
 use App\Notification;
 use App\Symptom;
 use App\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use DataTables;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Validator;
 
 class AdminNotificationsController extends Controller
 {
@@ -44,22 +47,23 @@ class AdminNotificationsController extends Controller
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
+        $validator = Validator::make($request->all(), [
             'users' => 'required',
-            'message' => 'required'
+            'message' => 'required',
+            'date' => 'required|after:' . Carbon::now()->addMinute(),
         ]);
-        if($request->users == "all") {
+        // if($request->users == "all") {
             // $recipients = User::select('phone')->get();
-            $recipients = DB::table('users')->select('phone')->get();
-        } else {
-            $recipients = DB::table('users')->select('phone')->where('state', '=', $request->users)->get();
-        }
+            // $recipients = DB::table('users')->select('phone')->get();
+        // } else {
+            // $recipients = DB::table('users')->select('phone')->where('state', '=', $request->users)->get();
+        // }
         // dd($recipients);
         // $recipients = $validatedData["users"];
-        foreach ($recipients as $recipient) {
+        // foreach ($recipients as $recipient) {
             // dd($recipient);
             // $this->sendMessage($validatedData["message"], $recipient->phone);
-        }
+        // }
 
         // $input = $request->all();
         // $recipientsDB = implode(', ', $request->users);
@@ -71,13 +75,21 @@ class AdminNotificationsController extends Controller
 
         $admin = Auth::user();
         // $input['user_id'] = $admin->id;
-        $admin->notifications()->updateOrCreate(["id" => $input['id']], ["recipients" => $request->users ,
-        "content" => $request->message, "when_to_send" => $request->date]);
+        if($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+        $admin->notifications()->updateOrCreate(["id" => $input['id']], [
+            "recipients" => $request->users,
+            "content" => $request->message, "when_to_send" => $request->date
+        ]);
+        return response()->json(['success' => 'Notification created successfully.']);
+
+        // return new JsonResponse(\error_response(422, 'Invalid notification', $validator->getMessageBag()->toArray()), 422);
         // Notification::updateOrCreate($input);
 
         $message = "Your notification has been created successfully.";
         // return redirect('/admin/notifications')->with('alert', $message);
-        return response()->json(['success' => 'Notification created successfully.']);
+
     }
 
     /**
