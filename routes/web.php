@@ -47,6 +47,7 @@ Route::group(['middleware'=>'admin'], function(){
 
     Route::resource('admin/manageUsers', 'AdminManageUsersController', ['as'=>'admin']);
     Route::get('/changeRole', 'AdminManageUsersController@changeRole');
+    Route::post('/admin/manageUsers/getTableData', 'AdminManageUsersController@getTableData');
 
     Route::resource('admin/symptoms', 'AdminSymptomsController', ['as' => 'admin']);
     Route::post('/admin/symptoms/getTableData','AdminSymptomsController@getTableData');

@@ -6,7 +6,7 @@
             <h1 class="m-0 text-dark">Manage Users</h1>
         </div>
 
-        <table class="table">
+        <table class="table" id="data-table">
             <thead>
                 <th>ID</th>
                 <th>Full Name</th>
@@ -16,7 +16,7 @@
                 <th>Role</th>
             </thead>
             <tbody>
-                @if($users)
+                {{-- @if($users)
                 @foreach($users as $user)
                     <tr>
                         <td>{{$user->id}}</td>
@@ -30,19 +30,90 @@
                         </td>
                     </tr>
                 @endforeach
-                @endif
+                @endif --}}
             </tbody>
         </table>
 
-        <div class="offset-6">
+        {{-- <div class="offset-6">
             {{$users->render()}}
-        </div>
+        </div> --}}
 
     </div>
 
 @endsection
 
 @section('scripts')
+<script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
+
+    <script>
+
+        var table = $('#data-table').DataTable({
+        processing: true,
+        serverSide: true,
+        // ajax: "{{ route('admin.notifications.index') }}",
+        ajax: {
+            url: "/admin/manageUsers/getTableData",
+            dataType: "json",
+            type: "POST",
+            data: {
+                _token: "{{csrf_token()}}",
+                // _token: $("._token").val(),
+            }
+        },
+        columns: [
+            {data: 'id', name: 'id'},
+            {data: 'name', name: 'name'},
+            {data: 'phone', name: 'phone'},
+            {data: 'email', name: 'email'},
+            {data: 'created_at',
+                render: function(data, type, row) {
+                    var time_to_string = new Date(Date.parse(data)).toLocaleString()
+                    return '<span>'+ time_to_string +'</span>';
+            }},
+            {data: 'role_id',
+                render: function(data, type, row) {
+                    if(data == 1 ) {
+                        return '<input data-id=' + data + ' class="role-class" type="checkbox" data-onstyle="info" data-toggle="toggle" data-on="Admin" data-off="Public"'  + ' checked>';
+                    }
+                    return '<input data-id=' + data + ' class="role-class" type="checkbox" data-onstyle="info" data-toggle="toggle" data-on="Admin" data-off="Public"'  + '>';
+                }
+            }
+        ],
+        // rowCallback: function ( row, data ) {
+        // $('input.role-class', row).prop( 'checked', data.active == 1 ).bootstrapToggle({size: 'mini'});
+        // }
+        "fnDrawCallback": function() {
+            console.log("im in the drawback");
+            $('.role-class').bootstrapSwitch();
+            // $('.role-class').bootstrapSwitch({
+            //     size: 'small',
+            //     onText: 'Admin',
+            //     offText: 'Public',
+            //     onColor: 'info',
+            //     offColor: 'default',
+            //     onSwitchChange: function (event, state) {
+            //         var status = $(this).prop('checked') == true ? 1 : 2;
+            //         var user_id = $(this).data('id');
+            //         $.ajax({
+            //             type: "GET",
+            //             dataType: "json",
+            //             url: '/changeRole',
+            //             data: {'role_id': status, 'id': user_id},
+            //             success: function(data){
+            //             //   alert(data.success)
+            //             swal({
+            //                     icon: 'success',
+            //                     title: 'Role changed successfully!\n',
+            //                     button: false,
+            //                     timer: 1500
+            //                 });
+            //             },
+            //         });
+            //     }
+            // })
+        }
+    });
+    </script>
     <script>
         $('.role-class').change(function() {
         var status = $(this).prop('checked') == true ? 1 : 2;
@@ -53,7 +124,13 @@
             url: '/changeRole',
             data: {'role_id': status, 'id': user_id},
             success: function(data){
-              alert(data.success)
+            //   alert(data.success)
+            swal({
+                    icon: 'success',
+                    title: 'Role changed successfully!\n',
+                    button: false,
+                    timer: 1500
+                });
             },
         });
     });

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Symptom;
 use Illuminate\Http\Request;
 use App\User;
+use DataTables;
 
 class AdminManageUsersController extends Controller
 {
@@ -17,6 +19,13 @@ class AdminManageUsersController extends Controller
         //
         $users = User::paginate(10);
         return(view('admin/manage_users', compact('users')));
+    }
+
+    public function getTableData(Request $request)
+    {
+        $data = User::latest()->get();
+        return Datatables::of($data)
+            ->make(true);
     }
 
     /**
