@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Symptom;
+use Carbon\Carbon;
 use DataTables;
+use Illuminate\Support\Facades\Validator;
 
 class AdminSymptomsController extends Controller
 {
@@ -66,6 +68,14 @@ class AdminSymptomsController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+        
         Symptom::updateOrCreate(
             ['id' => $request->symptom_id],
             ['name' => $request->name]

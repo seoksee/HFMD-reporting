@@ -111,6 +111,7 @@
 @endsection
 
 @section('scripts')
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
     <script>
         var table = $('#table').DataTable({
         processing: true,
@@ -178,10 +179,33 @@
                 $('#notificationForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 $('#saveBtn').html('Save Changes');
+                swal({
+                    icon: 'success',
+                    title: 'Notification saved successfully!',
+                    button: false,
+                    timer: 1500
+                });
                 table.draw();
             },
             error: function (data) {
                 console.log("Error:" , data);
+                var error_msg = '';
+                if(data.responseJSON.users) {
+                    error_msg += data.responseJSON.users[0];
+                }
+                if (data.responseJSON.date) {
+                    error_msg += '\n' + data.responseJSON.date[0];
+                }
+                if (data.responseJSON.message) {
+                    error_msg += '\n' + data.responseJSON.message[0];
+                }
+
+                swal({
+                    icon: 'error',
+                    title: 'Invalid input!',
+                    position: 'top',
+                    text: error_msg,
+                });
                 $('#saveBtn').html('Save Changes');
             }
         });
@@ -218,27 +242,43 @@
 
     $('table').on('click', '.deleteNotification', function () {
         var notification_id = $(this).data("id");
-        var confirmation = confirm("Are you sure to delete notification?");
-        if(confirmation == false) {
-            return false;
-        }
-
-        $.ajax({
-            data: {
-                _token: $("._token").val(),
-                notification_id: notification_id,
-            },
-            type: "POST",
-            url: "/admin/notifications/deleteData",
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                table.draw();
-            },
-            error: function (data) {
-                console.log('Error:', data);
+        // var confirmation = confirm("Are you sure to delete notification?");
+        // if(confirmation == false) {
+        //     return false;
+        // }
+        swal({
+            title: "Are you sure to delete?",
+            icon: "warning",
+            buttons: [true, "Yes, delete it!"],
+            closeOnConfirm: false,
+            closeOnCancel: false
+            })
+            .then((isConfirm) => {
+            if (isConfirm) {
+                $.ajax({
+                    data: {
+                        _token: $("._token").val(),
+                        notification_id: notification_id,
+                    },
+                    type: "POST",
+                    url: "/admin/notifications/deleteData",
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        swal("Deleted!", "Your notification has been deleted.", "success");
+                        table.draw();
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                        swal("Failed!", "Failed to delete notification.", "error");
+                    }
+                });
+            } else {
+                swal("Did nothing :)", "Your notification is safe", "info");
             }
-        });
+            });
+
+
     });
 
     </script>

@@ -78,6 +78,7 @@
 @endsection
 
 @section('scripts')
+<script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
 <script>
     var table = $('#data-table').DataTable({
         processing: true,
@@ -145,10 +146,26 @@
                 $('#symptomForm').trigger("reset");
                 $('#ajaxModel').modal('hide');
                 $('#saveBtn').html('Save Changes');
+                swal({
+                    icon: 'success',
+                    title: 'Symptom saved successfully!\n',
+                    button: false,
+                    timer: 1500
+                });
                 table.draw();
             },
             error: function (data) {
                 console.log('Error:', data);
+                var error_msg = '';
+                if(data.responseJSON.name) {
+                    error_msg += data.responseJSON.name[0];
+                }
+                swal({
+                    icon: 'error',
+                    title: 'Invalid input!',
+                    position: 'top',
+                    text: error_msg,
+                });
                 $('#saveBtn').html('Save Changes');
             }
         });
@@ -156,27 +173,42 @@
 
     $('#data-table').on('click', '.deleteSymptom', function () {
         var symptom_id = $(this).data("id");
-        var confirmation = confirm("Are You sure want to delete !");
-        if(confirmation == false) {
-            return false;
-        }
+        // var confirmation = confirm("Are You sure want to delete !");
+        // if(confirmation == false) {
+        //     return false;
+        // }
 
-        $.ajax({
-            data: {
-                _token: $("._token").val(),
-                symptom_id: symptom_id,
-            },
-            type: "POST",
-            url: "/admin/symptoms/deleteData",
-            dataType: 'json',
-            success: function (data) {
-                console.log(data);
-                table.draw();
-            },
-            error: function (data) {
-                console.log('Error:', data);
+        swal({
+            title: "Are you sure to delete?",
+            icon: "warning",
+            buttons: [true, "Yes, delete it!"],
+            closeOnConfirm: false,
+            closeOnCancel: false
+            })
+            .then((isConfirm) => {
+            if (isConfirm) {
+                $.ajax({
+                    data: {
+                        _token: $("._token").val(),
+                        symptom_id: symptom_id,
+                    },
+                    type: "POST",
+                    url: "/admin/symptoms/deleteData",
+                    dataType: 'json',
+                    success: function (data) {
+                        console.log(data);
+                        swal("Deleted!", "Your symptom has been deleted.", "success");
+                        table.draw();
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                        swal("Failed!", "Failed to delete symptom.", "error");
+                    }
+                });
+            } else {
+                swal("Did nothing :)", "Your symptom is safe", "info");
             }
-        });
+            });
     });
 
 </script>
