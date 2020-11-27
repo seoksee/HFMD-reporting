@@ -73,49 +73,19 @@
             {data: 'role_id',
                 render: function(data, type, row) {
                     if(data == 1 ) {
-                        return '<input data-id=' + data + ' class="role-class" type="checkbox" data-onstyle="info" data-toggle="toggle" data-on="Admin" data-off="Public"'  + ' checked>';
+                        return '<input data-id=' + row.id + ' class="role-class" type="checkbox" data-onstyle="info" data-on="Admin" data-off="Public"'  + ' checked>';
                     }
-                    return '<input data-id=' + data + ' class="role-class" type="checkbox" data-onstyle="info" data-toggle="toggle" data-on="Admin" data-off="Public"'  + '>';
+                    return '<input data-id=' + row.id + ' class="role-class" type="checkbox" data-onstyle="info" data-on="Admin" data-off="Public"'  + '>';
                 }
             }
         ],
-        // rowCallback: function ( row, data ) {
-        // $('input.role-class', row).prop( 'checked', data.active == 1 ).bootstrapToggle({size: 'mini'});
-        // }
-        "fnDrawCallback": function() {
-            console.log("im in the drawback");
-            $('.role-class').bootstrapSwitch();
-            // $('.role-class').bootstrapSwitch({
-            //     size: 'small',
-            //     onText: 'Admin',
-            //     offText: 'Public',
-            //     onColor: 'info',
-            //     offColor: 'default',
-            //     onSwitchChange: function (event, state) {
-            //         var status = $(this).prop('checked') == true ? 1 : 2;
-            //         var user_id = $(this).data('id');
-            //         $.ajax({
-            //             type: "GET",
-            //             dataType: "json",
-            //             url: '/changeRole',
-            //             data: {'role_id': status, 'id': user_id},
-            //             success: function(data){
-            //             //   alert(data.success)
-            //             swal({
-            //                     icon: 'success',
-            //                     title: 'Role changed successfully!\n',
-            //                     button: false,
-            //                     timer: 1500
-            //                 });
-            //             },
-            //         });
-            //     }
-            // })
+        rowCallback: function ( row, data ) {
+        $('input.role-class', row).prop( 'data-toggle="toggle" checked', data.role_id == 1 ).bootstrapToggle({width: "100px"});
         }
     });
     </script>
     <script>
-        $('.role-class').change(function() {
+        $('#data-table').on('change', '.role-class', function (event, state) {
         var status = $(this).prop('checked') == true ? 1 : 2;
         var user_id = $(this).data('id');
         $.ajax({

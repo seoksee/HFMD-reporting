@@ -3,7 +3,7 @@
 </footer>
 
 <!-- jQuery -->
-<script src="{{asset('js/jquery/jquery.min.js')}}"></script>
+{{-- <script src="{{asset('js/jquery/jquery.min.js')}}"></script> --}}
 <!-- jQuery UI 1.11.4 -->
 {{-- <script src="{{asset('/jquery-ui/jquery-ui.min.js')}}"></script> --}}
 <script>
