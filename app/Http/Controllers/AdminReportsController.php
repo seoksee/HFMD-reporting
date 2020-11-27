@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Report;
+use App\State;
 use App\Symptom;
 use DataTables;
 
@@ -33,6 +34,24 @@ class AdminReportsController extends Controller
     {
         $data = Report::latest()->get();
         return Datatables::of($data)
+            ->addColumn('user', function ($row) {
+                return '<span>' . $row->user->name . '</span>';
+            })
+            ->addColumn('symptoms', function ($row) {
+                $symptomText = '';
+                foreach(explode(',', $row->symptoms) as $symptom){
+                    $symptomText = $symptomText . Symptom::find((int)$symptom)->name . ", ";
+                }
+                if($row->other_symptoms) {
+                    $symptomText = $symptomText . '<strong>' . $row->other_symptoms . '</strong>';
+                }
+                
+                return $symptomText;
+            })
+            ->addColumn('resident', function($row) {
+                return '<span>' . State::find($row->residential_state_id)->name . '</span>';
+            })
+            ->rawColumns(['user', 'resident', 'symptoms'])
             ->make(true);
     }
 

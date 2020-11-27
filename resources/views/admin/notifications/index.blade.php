@@ -13,7 +13,7 @@
 
         {{-- <a class="btn btn-success float-right" style="margin:0.5%" href="{{route('admin.notifications.create')}}" id="createNewSymptom"> Create New Notification</a> --}}
         <a class="btn btn-success float-right" href="javascript:void(0)" id="createNewNotification"> Create New Notification</a>
-        <table class="table" id="table">
+        <table class="table" id="table" data-order='[[0, "desc"]]'>
             <thead>
                 <tr>
                     <th>ID</th>
@@ -128,7 +128,7 @@
             }
         },
         columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'id', name: 'id'},
             {data: 'recipients', name: 'recipients'},
             {data: 'content', name: 'content'},
             {data: 'created_by', name: 'created_by'},

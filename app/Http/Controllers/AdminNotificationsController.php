@@ -190,7 +190,6 @@ class AdminNotificationsController extends Controller
     public function getTableData(Request $request) {
         $data = Notification::latest()->get();
         return Datatables::of($data)
-            ->addIndexColumn()
             ->addColumn('created_by', function ($row) {
             return '<span>' . $row->user->name . '</span>';
             })
