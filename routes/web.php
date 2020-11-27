@@ -44,6 +44,7 @@ Route::group(['middleware'=>'admin'], function(){
     Route::get('/changeFatal', 'AdminReportsController@changeFatal');
     Route::get('/changeVerify', 'AdminReportsController@changeVerify');
     Route::post('/admin/reports/deleteData', 'AdminReportsController@deleteData');
+    Route::post('/admin/reports/getTableData', 'AdminReportsController@getTableData');
 
     Route::resource('admin/manageUsers', 'AdminManageUsersController', ['as'=>'admin']);
     Route::get('/changeRole', 'AdminManageUsersController@changeRole');

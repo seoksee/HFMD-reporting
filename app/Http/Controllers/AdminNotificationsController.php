@@ -191,13 +191,10 @@ class AdminNotificationsController extends Controller
         $data = Notification::latest()->get();
         return Datatables::of($data)
             ->addIndexColumn()
-            // ->addColumn('action', function ($row) {
-            // $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editNotification">Edit</a>';
-            // $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteNotification">Delete</a>';
-            // return $btn;
-            //     return $btn;
-            // })
-            // ->rawColumns(['action'])
+            ->addColumn('created_by', function ($row) {
+            return '<span>' . $row->user->name . '</span>';
+            })
+            ->rawColumns(['created_by'])
             ->make(true);
     }
 }

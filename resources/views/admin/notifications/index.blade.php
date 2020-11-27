@@ -19,6 +19,7 @@
                     <th>ID</th>
                     <th>Recipients</th>
                     <th>Message</th>
+                    <th>Created By</th>
                     <th>Notification Date & Time</th>
                     <th>Status</th>
                     <th>Action</th>
@@ -130,6 +131,7 @@
             {data: 'DT_RowIndex', name: 'DT_RowIndex'},
             {data: 'recipients', name: 'recipients'},
             {data: 'content', name: 'content'},
+            {data: 'created_by', name: 'created_by'},
             {data: 'when_to_send', name: 'when_to_send'},
             {data: 'when_to_send',
             render: function(data, type, row) {

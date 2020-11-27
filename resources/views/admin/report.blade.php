@@ -90,7 +90,49 @@
 @endsection
 
 @section('scripts')
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
     <script>
+        // var table = $('#report-table').DataTable({
+        //     processing: true,
+        //     serverSide: true,
+        //     ajax: {
+        //         url: "/admin/reports/getTableData",
+        //         dataType: "json",
+        //         type: "POST",
+        //         data: {
+        //             _token: "{{csrf_token()}}",
+        //             // _token: $("._token").val(),
+        //         }
+        //     },
+        //     columns: [
+        //         {data: 'id', name: 'id'},
+        //         {data: 'id',
+        //             render: function(data, type, row) {
+        //                 return '<a href="{{route(\'admin.report.show\', ' + row.id + ')}}"><i class="fas fa-eye">';
+        //             }
+        //         }
+        //         {data: 'name', name: 'name'},
+        //         {data: 'phone', name: 'phone'},
+        //         {data: 'email', name: 'email'},
+        //         {data: 'created_at',
+        //             render: function(data, type, row) {
+        //                 var time_to_string = new Date(Date.parse(data)).toLocaleString()
+        //                 return '<span>'+ time_to_string +'</span>';
+        //         }},
+        //         {data: 'role_id',
+        //             render: function(data, type, row) {
+        //                 if(data == 1 ) {
+        //                     return '<input data-id=' + row.id + ' class="role-class" type="checkbox" data-onstyle="info" data-on="Admin" data-off="Public"'  + ' checked>';
+        //                 }
+        //                 return '<input data-id=' + row.id + ' class="role-class" type="checkbox" data-onstyle="info" data-on="Admin" data-off="Public"'  + '>';
+        //             }
+        //         }
+        //     ],
+        //     rowCallback: function ( row, data ) {
+        //     $('input.role-class', row).prop( 'data-toggle="toggle" checked', data.role_id == 1 ).bootstrapToggle({width: "100px"});
+        //     }
+        // });
+
     $('.status-class').change(function() {
         var status = $(this).prop('checked') == true ? 1 : 0;
         var report_id = $(this).data('id');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Report;
 use App\Symptom;
+use DataTables;
 
 class AdminReportsController extends Controller
 {
@@ -15,7 +16,7 @@ class AdminReportsController extends Controller
      */
     public function index()
     {
-        $reports = Report::paginate(8);
+        $reports = Report::orderBy('id','desc')->paginate(8);
         // dd($reports);
         foreach($reports as $report){
             $symptoms = $report->symptoms;
@@ -26,6 +27,13 @@ class AdminReportsController extends Controller
         }
         // return view('/');
         return view('admin.report', compact('reports'));
+    }
+
+    public function getTableData(Request $request)
+    {
+        $data = Report::latest()->get();
+        return Datatables::of($data)
+            ->make(true);
     }
 
     /**
@@ -129,6 +137,6 @@ class AdminReportsController extends Controller
     {
         $report_id = $request->report_id;
         $report = Report::find($report_id)->delete();
-        return response()->json(['success' => 'Symptom deleted successfully.']);
+        return response()->json(['success' => 'Report deleted successfully.']);
     }
 }
