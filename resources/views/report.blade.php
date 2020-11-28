@@ -41,7 +41,7 @@
                 <label for="DOB" class="col-md-5 col-form-label text-md-right">{{ __('Date of birth of infected child') }}</label>
                 <span class="col-form-label"><strong>:</strong></span>
                 <div class="col-md-6">
-                    <input type="date" id="DOB" class="form-control" name="DOB" value="{{ old('DOB') }}" required autofocus>
+                <input type="date" id="DOB" class="form-control" name="DOB" max="{{Carbon::now()->isoFormat('YYYY-MM-DD')}}" value="{{ old('DOB') }}" required autofocus>
                 </div>
             </div>
             <div class="form-group row">
@@ -71,26 +71,31 @@
                     onclick="var input = $('#other'); if(this.checked){ input.removeAttr('disabled'); input.focus();}else{input.attr('disabled','disabled');}" />
                     <label for="other">Other: </label>
                     <input id="other" name="other_symptoms" type="text" class="col-md-6 " disabled="disabled"/>
+                    <div id="symptom_error"></div>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="diagnosis" class="col-md-5 col-form-label text-md-right">{{ __('Date of diagnosis') }}</label>
                 <span class="col-form-label"><strong>:</strong></span>
                 <div class="col-md-6">
-                    <input type="date" id="diagnosis" class="form-control" name="diagnosis" autofocus>
+                    <input type="date" id="diagnosis" class="form-control" name="diagnosis" max="{{Carbon::now()->isoFormat('YYYY-MM-DD')}}" autofocus>
                 </div>
             </div>
             <div class="form-group row">
                 <label for="hospital" class="col-md-5 col-form-label text-md-right">{{ __('Admitted to hospital?') }}</label>
                 <span class="col-form-label"><strong>:</strong></span>
-                <div class="col-md-3 form-check form-check-inline">
-                    <input type="radio" class="form-check-input" name="hospital_admission" value="1" autofocus required/>
-                    <label for="hospitalY" class="form-check-label">Yes</label>
+                <div class="col-md-6">
+                    <div class="col-md-5 form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="hospital_admission" value="1" autofocus required/>
+                        <label for="hospitalY" class="form-check-label">Yes</label>
+                    </div>
+                    <div class="col-md-5 form-check form-check-inline">
+                        <input type="radio" class="form-check-input" name="hospital_admission" value="0" autofocus/>
+                        <label for="hospitalN" class="form-check-label">No</label>
+                    </div>
+                    <div id="hospital_error"></div>
                 </div>
-                <div class="col-md-3 form-check form-check-inline">
-                    <input type="radio" class="form-check-input" name="hospital_admission" value="0" autofocus/>
-                    <label for="hospitalN" class="form-check-label">No</label>
-                </div>
+
             </div>
             <div class="form-group row">
                 <label for="resident" class="col-md-5 col-form-label text-md-right">{{ __('Residential Area') }}</label>
@@ -121,16 +126,20 @@
             <div class="form-group row">
                 <label for="kindergarten" class="col-md-5 col-form-label text-md-right">{{ __('Attending to nursery school or kindergarten?') }}</label>
                 <span class="col-form-label"><strong>:</strong></span>
-                <div class="col-md-3 form-check form-check-inline">
+                <div class="col-md-6">
+                    <div class="col-md-5 form-check form-check-inline">
                     <input type="radio" id="kindergartenY" class="form-check-input" name="attend_kindergarten" value="1" autofocus required
                 onclick="var input = $('.institution'); if(this.checked){input.show('slow');}">
                     <label for="kindergartenY" class="form-check-label">Yes</label>
                 </div>
-                <div class="col-md-3 form-check form-check-inline">
+                <div class="col-md-5 form-check form-check-inline">
                     <input type="radio" id="kindergartenN" class="form-check-input" name="attend_kindergarten" value="0" autofocus
                     onclick="var input = $('.institution'); if(this.checked){input.hide('slow');}">
                     <label for="kindergartenN" class="form-check-label">No</label>
                 </div>
+                <div id="kindergarten_error"></div>
+                </div>
+
             </div>
             <div class="form-group row institution">
                 <label for="school" class="col-md-5 col-form-label text-md-right">{{ __('Location of Institution') }}</label>
@@ -219,7 +228,13 @@
                     required: "Please upload the file",
                 },
                 "symptoms[]": {
-                    required: "Please select at least one symptom or sign."
+                    required: "Please select at least one symptom or sign.",
+                },
+                hospital_admission: {
+                    required: "Please select one of the option.",
+                },
+                attend_kindergarten: {
+                    required: "Please select one of the option.",
                 }
             },
             highlight: function (element) {
@@ -230,19 +245,20 @@
             },
             errorElement: "span",
             errorClass: "help-block",
-            // errorPlacement: function (error, element) {
-            //     if (element.parent(".input-group").length) {
-            //         error.insertAfter(element.parent());
-            //     } else if (element.attr("name") == "DOB") {
-            //         error
-            //             .appendTo("#error_document_types_id")
-            //             .addClass("text-danger");
-            //     } else if (element.attr("name") == "relationship") {
-            //         error.appendTo("#error_files").addClass("text-danger");
-            //     } else {
-            //         error.insertAfter(element);
-            //     }
-            // },
+            errorPlacement: function (error, element) {
+                if (element.parent(".input-group").length) {
+                    error.insertAfter(element.parent());
+                } else if (element.attr("name") == "symptoms[]") {
+                    error
+                        .appendTo("#symptom_error");
+                } else if (element.attr("name") == "hospital_admission") {
+                    error.appendTo("#hospital_error");
+                } else if (element.attr("name") == "attend_kindergarten") {
+                    error.appendTo("#kindergarten_error");
+                } else {
+                    error.insertAfter(element);
+                }
+            },
 
             // Display error
             invalidHandler: function (event, validator) {
@@ -251,7 +267,7 @@
                     title: "",
                     text:
                         "There are some errors in your submission. Please correct them.",
-                    icon: "error",
+                    icon: "warning",
                     confirmButtonClass: "btn btn-secondary",
                 });
             },
