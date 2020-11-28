@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Mail;
 use App\State;
 use App\District;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class ReportController extends Controller
 {
@@ -50,6 +51,19 @@ class ReportController extends Controller
      */
     public function store(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'DOB' => 'required | before:' . Carbon::now(),
+            'relationship' => 'required',
+            'symptoms' => 'required',
+            'diagnosis' => 'before:' . Carbon::now(),
+            'hospital_admission' => 'required',
+            'residential_state_id' => 'required',
+            'attend_kindergarten' => 'required'
+        ]);
+        if ($validator->fails()) {
+            return response()->json($validator->messages(), 422);
+        }
+
         $input = $request->all();
         $user = Auth::user();
         if($file = $request->file('document_id')){
@@ -68,6 +82,7 @@ class ReportController extends Controller
             $input['children_in_kindergarten_infected'] = 0;
         }
         // dd($request->children_in_kindergarten_infected);
+
         $user->reports()->create($input);
         $message = "Your report has been received and waiting review by an admin.";
 
@@ -80,7 +95,8 @@ class ReportController extends Controller
             $message->to($user->email, $user->name)->subject('Reporting on HFMD reporting system');
         });
 
-        return redirect('/')->with('alert', $message);
+        // return redirect('/')->with('alert', $message);
+        return response()->json(['success' => 'Report created successfully.']);
     }
 
     /**
