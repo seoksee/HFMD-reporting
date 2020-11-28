@@ -1,10 +1,42 @@
 @extends('layouts.user_home')
 
 @section('content')
+<style>
+    .has-error .help-block,
+.has-error .control-label,
+.has-error .radio,
+.has-error .checkbox,
+.has-error .radio-inline,
+.has-error .checkbox-inline,
+.has-error.radio label,
+.has-error.checkbox label,
+.has-error.radio-inline label,
+.has-error.checkbox-inline label {
+  color: #a94442;
+}
+.has-error .form-control {
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+.has-error .form-control:focus {
+  border-color: #843534;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+}
+.has-error .input-group-addon {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #a94442;
+}
+.has-error .form-control-feedback {
+  color: #a94442;
+}
+    </style>
     <div class="container report-container p-5">
         <h3 class="text-center"><strong>Hand Foot Mouth Disease Reporting</strong></h3>
-        <form action="/report" class="user" method="POST" enctype="multipart/form-data">
-            @csrf
+        <form id="add_new_report" action="#" class="user" enctype="multipart/form-data">
+            {{csrf_field()}}
             <div class="form-group row">
                 <label for="DOB" class="col-md-5 col-form-label text-md-right">{{ __('Date of birth of infected child') }}</label>
                 <span class="col-form-label"><strong>:</strong></span>
@@ -35,7 +67,7 @@
                         <input type="checkbox" class="custom-checkbox" name="symptoms[]" value="{{$symptom->id}}" >
                         {{ $symptom->name }} <br>
                     @endforeach
-                    <input type="checkbox" class="custom-checkbox" 
+                    <input type="checkbox" class="custom-checkbox"
                     onclick="var input = $('#other'); if(this.checked){ input.removeAttr('disabled'); input.focus();}else{input.attr('disabled','disabled');}" />
                     <label for="other">Other: </label>
                     <input id="other" name="other_symptoms" type="text" class="col-md-6 " disabled="disabled"/>
@@ -150,8 +182,11 @@
         </div>
 
     </div>
+    <script src="https://unpkg.com/sweetalert@2.1.2/dist/sweetalert.min.js"></script>
 
     <script>
+
+
         $(".institution").hide();
         $("#other-infected-y").change(function(event){
             X = event.target.value;
@@ -162,14 +197,146 @@
             }
         });
         $(document).ready(function () {
-            $('#checkBtn').click(function() {
-                checked = $("input[type=checkbox]:checked").length;
-
-                if(!checked) {
-                    alert("You must check at least one symptoms and signs.");
-                return false;
+            validator2 = $('#add_new_report').validate({
+            // ignore: ":hidden",
+            rules: {
+                DOB: {
+                    required: true,
+                },
+                relationship: {
+                    required: true,
+                },
+                "symptoms[]": {
+                    required: true,
+                    minlength: 1,
                 }
-            });
+            },
+            messages: {
+                DOB: {
+                    required: "Date of birth of infected child is required.",
+                },
+                relationship: {
+                    required: "Please upload the file",
+                },
+                "symptoms[]": {
+                    required: "Please select at least one symptom or sign."
+                }
+            },
+            highlight: function (element) {
+                $(element).closest(".form-group").addClass("has-error");
+            },
+            unhighlight: function (element) {
+                $(element).closest(".form-group").removeClass("has-error");
+            },
+            errorElement: "span",
+            errorClass: "help-block",
+            // errorPlacement: function (error, element) {
+            //     if (element.parent(".input-group").length) {
+            //         error.insertAfter(element.parent());
+            //     } else if (element.attr("name") == "DOB") {
+            //         error
+            //             .appendTo("#error_document_types_id")
+            //             .addClass("text-danger");
+            //     } else if (element.attr("name") == "relationship") {
+            //         error.appendTo("#error_files").addClass("text-danger");
+            //     } else {
+            //         error.insertAfter(element);
+            //     }
+            // },
+
+            // Display error
+            invalidHandler: function (event, validator) {
+
+                swal({
+                    title: "",
+                    text:
+                        "There are some errors in your submission. Please correct them.",
+                    icon: "error",
+                    confirmButtonClass: "btn btn-secondary",
+                });
+            },
+
+            // Submit valid form
+            submitHandler: function (form) {
+                $.ajax({
+            data: $('#add_new_report').serialize(),
+            url: "/report",
+            type: "POST",
+            dataType: 'json',
+            success: function (data) {
+                swal({
+                    icon: 'success',
+                    title: 'Your report has been submitted and waiting review by an admin.',
+                    button: false,
+                    timer: 1500
+                }),
+                window.location.href= "/";
+            },
+            error: function (data) {
+                console.log('Error:', data);
+                var error_msg = '';
+                if(data.responseJSON.name) {
+                    error_msg += data.responseJSON.name[0];
+                }
+                swal({
+                    icon: 'error',
+                    title: 'Invalid input!',
+                    position: 'top',
+                    text: error_msg,
+                });
+            }
+        });
+
+                // setTimeout(function () {
+                //     var dataForm = new FormData();
+                //     var token = $("._token").val();
+                //     var files = $('input[name="files"]')[0].files[0];
+                //     var document_types_id = $(".document_types_id").val();
+                //     var description = $(".description").val();
+                //     var invoice_id = $(".invoice_id").val();
+                //     var role = $(".role").val();
+
+                //     dataForm.append("_token", token);
+                //     dataForm.append("files", files);
+                //     dataForm.append("document_types_id", document_types_id);
+                //     dataForm.append("description", description);
+                //     dataForm.append("id_", invoice_id);
+                //     dataForm.append("role", role);
+
+                //     // alert(formData);
+
+                //     $.ajax({
+                //         url: "/report",
+                //         type: "POST",
+                //         data: dataForm,
+                //         mimeTypes: "multipart/form-data",
+                //         contentType: false,
+                //         cache: false,
+                //         processData: false,
+                //         error: function (returnErrorData) {
+                //             swal(
+                //                 "Error",
+                //                 "Opps, Your file not successfully upload.",
+                //                 "warning"
+                //             );
+
+                //         },
+                //         success: function (returnData) {
+                //             if (returnData["response"] == "ok") {
+                //                 $(".upload_document").modal("hide");
+                //                 swal(
+                //                     "Upload Documents",
+                //                     "Your file successfully uploaded.",
+                //                     "success"
+                //                 );
+                //             }
+
+                //         },
+                //     });
+
+                // }, 2000);
+            },
+        });
         });
     </script>
 @endsection
