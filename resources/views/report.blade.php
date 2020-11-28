@@ -49,7 +49,7 @@
                 <span class="col-form-label"><strong>:</strong></span>
                 <div class="col-md-6 ">
 
-                    <select name="relationship" id="" class="custom-select" required >
+                    <select name="relationship" id="relationship_select" class="custom-select" required >
                         <option value="parent">Parent</option>
                         <option value="guardian">Guardian</option>
                         <option value="guardian_dependent">Guardian dependent</option>
@@ -274,83 +274,113 @@
 
             // Submit valid form
             submitHandler: function (form) {
-                $.ajax({
-            data: $('#add_new_report').serialize(),
-            url: "/report",
-            type: "POST",
-            dataType: 'json',
-            success: function (data) {
-                swal({
-                    icon: 'success',
-                    title: 'Your report has been submitted and waiting review by an admin.',
-                    button: false,
-                    timer: 1500
-                }),
-                window.location.href= "/";
-            },
-            error: function (data) {
-                console.log('Error:', data);
-                var error_msg = '';
-                if(data.responseJSON.name) {
-                    error_msg += data.responseJSON.name[0];
-                }
-                swal({
-                    icon: 'error',
-                    title: 'Invalid input!',
-                    position: 'top',
-                    text: error_msg,
-                });
-            }
-        });
+        //         $.ajax({
+        //     data: $('#add_new_report').serialize(),
+        //     url: "/report",
+        //     type: "POST",
+        //     dataType: 'json',
+        //     success: function (data) {
+        //         swal({
+        //             icon: 'success',
+        //             title: 'Your report has been submitted and waiting review by an admin.',
+        //             button: false,
+        //             timer: 1500
+        //         }),
+        //         window.location.href= "/";
+        //     },
+        //     error: function (data) {
+        //         console.log('Error:', data);
+        //         var error_msg = '';
+        //         if(data.responseJSON.name) {
+        //             error_msg += data.responseJSON.name[0];
+        //         }
+        //         swal({
+        //             icon: 'error',
+        //             title: 'Invalid input!',
+        //             position: 'top',
+        //             text: error_msg,
+        //         });
+        //     }
+        // });
 
-                // setTimeout(function () {
-                //     var dataForm = new FormData();
-                //     var token = $("._token").val();
-                //     var files = $('input[name="files"]')[0].files[0];
-                //     var document_types_id = $(".document_types_id").val();
-                //     var description = $(".description").val();
-                //     var invoice_id = $(".invoice_id").val();
-                //     var role = $(".role").val();
+                setTimeout(function () {
+                    var dataForm = new FormData();
+                    var token = "{{csrf_token()}}";
+                    var DOB = $('input[name="DOB"]').val();
+                    var relationship = $('#relationship_select option:selected').text();
+                    var symptoms = [];
+                    $.each($("input[name='symptoms[]']:checked"), function() {
+                        symptoms.push($(this).val());
+                    });
+                    var other_symptoms = $('input[name="other_symptoms"]').val();
+                    var diagnosis = $('input[name="diagnosis"]').val();
+                    var hospital_admission = $('input[name="hospital_admission"]:checked').val();
+                    var residential_state_id = $('#residential_state option:selected').val();
+                    console.log(residential_state_id);
+                    var attend_kindergarten = $('input[name="attend_kindergarten"]:checked').val();
+                    var kindergarten_state_id = $('#kindergarten_state option:selected').val();
+                    var children_in_kindergarten_infected = $('input[name="children_in_kindergarten_infected"]').val();
+                    var children_infected = $('input[name="children_infected"]:checked').val();
+                    if(children_infected == 0) {
+                        children_in_kindergarten_infected = 0;
+                    }
+                    var document_id = $('input[name="document_id"]')[0].files[0];
+                    // var document_types_id = $(".document_types_id").val();
+                    // var description = $(".description").val();
+                    // var invoice_id = $(".invoice_id").val();
+                    // var role = $(".role").val();
 
-                //     dataForm.append("_token", token);
-                //     dataForm.append("files", files);
-                //     dataForm.append("document_types_id", document_types_id);
-                //     dataForm.append("description", description);
-                //     dataForm.append("id_", invoice_id);
-                //     dataForm.append("role", role);
+                    dataForm.append("_token", token);
+                    dataForm.append("DOB", DOB);
+                    dataForm.append("relationship", relationship);
+                    dataForm.append("symptoms[]", symptoms);
+                    dataForm.append("other_symptoms", other_symptoms);
+                    dataForm.append("diagnosis", diagnosis);
+                    dataForm.append("hospital_admission", hospital_admission);
+                    dataForm.append("residential_state_id", residential_state_id);
+                    dataForm.append("attend_kindergarten", attend_kindergarten);
+                    dataForm.append("kindergarten_state_id", kindergarten_state_id);
+                    dataForm.append("children_in_kindergarten_infected", children_in_kindergarten_infected);
+                    dataForm.append("document_id", document_id);
 
-                //     // alert(formData);
+                    // alert(formData);
 
-                //     $.ajax({
-                //         url: "/report",
-                //         type: "POST",
-                //         data: dataForm,
-                //         mimeTypes: "multipart/form-data",
-                //         contentType: false,
-                //         cache: false,
-                //         processData: false,
-                //         error: function (returnErrorData) {
-                //             swal(
-                //                 "Error",
-                //                 "Opps, Your file not successfully upload.",
-                //                 "warning"
-                //             );
+                    $.ajax({
+                        url: "/report",
+                        type: "POST",
+                        data: dataForm,
+                        mimeTypes: "multipart/form-data",
+                        contentType: false,
+                        cache: false,
+                        processData: false,
+                        error: function (data) {
+                            console.log('Error:', data);
+                            var error_msg = '';
+                            if(data.responseJSON.name) {
+                                error_msg += data.responseJSON.name[0];
+                            }
+                            swal({
+                                icon: 'error',
+                                title: 'There is an error submitting your report.',
+                                position: 'top',
+                                text: error_msg,
+                            });
 
-                //         },
-                //         success: function (returnData) {
-                //             if (returnData["response"] == "ok") {
-                //                 $(".upload_document").modal("hide");
-                //                 swal(
-                //                     "Upload Documents",
-                //                     "Your file successfully uploaded.",
-                //                     "success"
-                //                 );
-                //             }
+                        },
+                        success: function (data) {
+                            swal({
+                                title: "Your report has been submitted and waiting review by an admin.",
+                                icon: "success",
 
-                //         },
-                //     });
+                                })
+                                .then(() => {
+                                    window.location.href= "/";
 
-                // }, 2000);
+                                });
+                        },
+                    });
+
+                }, 500);
             },
         });
         });
