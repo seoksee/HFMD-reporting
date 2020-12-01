@@ -38,15 +38,15 @@
         <form id="add_new_report" action="#" class="user" enctype="multipart/form-data">
             {{csrf_field()}}
             <div class="form-group row">
-                <label for="DOB" class="col-md-5 col-form-label text-md-right">{{ __('Date of birth of infected child') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="DOB" class="col-md-5 col-form-label text-md-right">{{ __('Date of birth of infected child') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                 <input type="date" id="DOB" class="form-control" name="DOB" max="{{Carbon::now()->isoFormat('YYYY-MM-DD')}}" value="{{ old('DOB') }}" required autofocus>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="relationship" class="col-md-5 col-form-label text-md-right">{{ __('Relationship with infected child') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="relationship" class="col-md-5 col-form-label text-md-right">{{ __('Relationship with infected child') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6 ">
 
                     <select name="relationship" id="relationship_select" class="custom-select" required >
@@ -60,8 +60,8 @@
                 </div>
             </div>
             <div class="form-group row">
-                <p class="col-md-5 col-form-label text-md-right">{{ __('Symptoms and Signs') }}<p>
-                <span class="col-form-label"><strong>:</strong></spatext-md-rightn>
+                <p class="col-md-5 col-form-label text-md-right">{{ __('Symptoms and Signs') }}<span class="col-form-label"><strong>:</strong></spatext-md-rightn><p>
+
                 <div class="col-md-6 col-form-label">
                     @foreach ($symptoms as $symptom)
                         <input type="checkbox" class="custom-checkbox" name="symptoms[]" value="{{$symptom->id}}" >
@@ -75,15 +75,15 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="diagnosis" class="col-md-5 col-form-label text-md-right">{{ __('Date of diagnosis') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="diagnosis" class="col-md-5 col-form-label text-md-right">{{ __('Date of diagnosis') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                     <input type="date" id="diagnosis" class="form-control" name="diagnosis" max="{{Carbon::now()->isoFormat('YYYY-MM-DD')}}" autofocus>
                 </div>
             </div>
             <div class="form-group row">
-                <label for="hospital" class="col-md-5 col-form-label text-md-right">{{ __('Admitted to hospital?') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="hospital" class="col-md-5 col-form-label text-md-right">{{ __('Admitted to hospital?') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                     <div class="col-md-5 form-check form-check-inline">
                         <input type="radio" class="form-check-input" name="hospital_admission" value="1" autofocus required/>
@@ -98,8 +98,8 @@
 
             </div>
             <div class="form-group row">
-                <label for="resident" class="col-md-5 col-form-label text-md-right">{{ __('Residential Area') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="resident" class="col-md-5 col-form-label text-md-right">{{ __('Residential Area') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                     <select name="residential_state_id" id="residential_state" class="custom-select" required >
                         @foreach($states as $state)
@@ -124,8 +124,8 @@
 
             </div>
             <div class="form-group row">
-                <label for="kindergarten" class="col-md-5 col-form-label text-md-right">{{ __('Attending to nursery school or kindergarten?') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="kindergarten" class="col-md-5 col-form-label text-md-right">{{ __('Attending to nursery school or kindergarten?') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                     <div class="col-md-5 form-check form-check-inline">
                     <input type="radio" id="kindergartenY" class="form-check-input" name="attend_kindergarten" value="1" autofocus required
@@ -142,8 +142,8 @@
 
             </div>
             <div class="form-group row institution">
-                <label for="school" class="col-md-5 col-form-label text-md-right">{{ __('Location of Institution') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="school" class="col-md-5 col-form-label text-md-right">{{ __('Location of Institution') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                     <select name="kindergarten_state_id" id="kindergarten_state" class="custom-select" required >
                         @foreach($states as $state)
@@ -154,8 +154,8 @@
                 </div>
             </div>
             <div class="form-group row institution">
-                <div class="col-md-5 col-form-label text-md-right">{{ __('Any children from the institution have infected by HFMD recently?') }}</div>
-                <span class="col-form-label"><strong>:</strong></span>
+                <div class="col-md-5 col-form-label text-md-right">{{ __('Any children from the institution have infected by HFMD recently?') }}<span class="col-form-label"><strong>:</strong></span></div>
+
                 <div class="col-md-3 form-check form-check-inline">
                     <input type="radio" id="other-infect-y" class="form-check-input" name="children_infected" value="1"
                     onchange="var input = $('#infected');
@@ -175,8 +175,8 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="document" class="col-md-5 col-form-label text-md-right">{{ __('Document proof') }}</label>
-                <span class="col-form-label"><strong>:</strong></span>
+                <label for="document" class="col-md-5 col-form-label text-md-right">{{ __('Document proof') }}<span class="col-form-label"><strong>:</strong></span></label>
+
                 <div class="col-md-6">
                     <input type="file" class="form-control-file" name="document_id" autofocus >
                 </div>
@@ -185,7 +185,7 @@
                     {{ __('Submit') }}
                 </button><br>
         </form>
-        <div class="container">
+        <div class="container d-none d-lg-inline">
             <img src="https://i1.wp.com/images.clipartpanda.com/reception-clipart-cropped-preschool-clipart23.png" height="130rem" alt="">
             <img src="https://i1.wp.com/images.clipartpanda.com/reception-clipart-cropped-preschool-clipart23.png" height="130rem" alt="">
         </div>

@@ -15,10 +15,12 @@
                 </div>
                 <!-- Card Body -->
                 <div class="card-body">
-
+                    <div style="overflow-x: scroll">
+                    <div class="chart-container" style="position: relative;  width:900px;">
                     {{-- <canvas id="myAreaChart"></canvas> --}}
                     <canvas id="symptomsChart"></canvas>
-
+                    </div>
+                </div>
               </div>
             </div>
 

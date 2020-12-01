@@ -10,12 +10,12 @@
                 </li>
                 <hr class="sidebar-divider">
                 <hr>
-                <li class="nav-item has-treeview">
+                {{-- <li class="nav-item has-treeview">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-chart-pie"></i>
                         <p>{{__('Overview')}}</p>
                     </a>
-                </li>
+                </li> --}}
                 <li class="nav-item has-treeview">
                     <a href="{{route('admin.report.index')}}" class="nav-link">
                         <i class="nav-icon fas fa-edit"></i>

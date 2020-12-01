@@ -9,7 +9,7 @@
 <div class="container container-fluid p-5">
     <div class="row justify-content-center">
             <!-- Confirmed cases -->
-            <div class="col-xl-3 col-md-6 mb-5">
+            <div class="col-md-3 col-12 mb-5">
               <div class="card border-left-primary shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -26,7 +26,7 @@
             </div>
 
             <!-- Fatal -->
-            <div class="col-xl-3 col-md-6 mb-5">
+            <div class="col-md-3 col-12 mb-5">
               <div class="card border-left-danger shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -41,7 +41,7 @@
             </div>
 
           <!-- Total -->
-          <div class="col-xl-3 col-md-6 mb-5">
+          <div class="col-md-3 col-12 mb-5">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
@@ -66,8 +66,12 @@
             <!-- Card Body -->
             <div class="card-body row">
                 <div class="col-md-10">
+                    <div style="overflow-x: scroll">
+                    <div class="chart-container" style="position: relative;  width:900px;">
                     {{-- <canvas id="myAreaChart"></canvas> --}}
                     <canvas id="line-chart"></canvas>
+                    </div>
+                    </div>
                 </div>
                 <div class="col-md-2">
                     <button class="btn btn-outline-primary dropdown-toggle" href="#" id="caseDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

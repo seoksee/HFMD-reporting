@@ -55,7 +55,6 @@ class ReportController extends Controller
             'DOB' => 'required | before:' . Carbon::now(),
             'relationship' => 'required',
             'symptoms' => 'required',
-            'diagnosis' => 'before:' . Carbon::now(),
             'hospital_admission' => 'required',
             'residential_state_id' => 'required',
             'attend_kindergarten' => 'required'

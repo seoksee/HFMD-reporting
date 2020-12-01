@@ -1,11 +1,15 @@
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <div class="navbar-header">
-        <a href="/" class="navbar-brand">HFMD Real-time Case Reporting System</a>
-    </div>
-    <!-- Topbar Navbar -->
-    <ul class="navbar-nav ml-auto">
+<nav class="navbar navbar-expand-sm navbar-light bg-white mb-4 static-top shadow">
+    <button class="btn btn-link d-md-none rounded-circle" type="button" data-toggle="collapse" data-target='#Navbar'>
+                <i class="fa fa-bars"></i>
+            </button>
+        <a href="/" class="navbar-brand d-sm-none ml-auto">HFMD Case Reporting system</a>
+        <a href="/" class="navbar-brand d-none d-sm-inline ml-auto">HFMD Real-time Case Reporting System</a>
 
-        <!-- Nav Item - Home -->
+    <!-- Topbar Navbar -->
+    <div class="collapse navbar-collapse" id="Navbar">
+    <ul class="navbar-nav ml-auto">
+        <div class="row">
+            <!-- Nav Item - Home -->
         <li class="nav-item">
             <a class="nav-link" href="/" role="button" aria-haspopup="true" aria-expanded="false">
                 <table>
@@ -82,18 +86,19 @@
         <div class="topbar-divider d-none d-sm-block"></div>
 
         <!-- Nav Item - User Information -->
-        @if(Auth::guest())
+        <div class="topbar ml-auto">
+            @if(Auth::guest())
             <li class="nav-item dropdown no-arrow">
                 <a class="nav-link " href="{{ url('/login') }}" role="button" aria-haspopup="true" aria-expanded="false">Login
-                <img class="img-profile rounded-circle" height="60" width="60" src="{{asset('images/person-circle-outline.svg')}}">
+                <img class="img-profile rounded-circle" height="50" width="50" src="{{asset('images/person-circle-outline.svg')}}">
                 </a>
             </li>
         @else
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-            <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
-                <img class="img-profile rounded-circle" src="{{asset('images/person-circle-outline.svg')}}">
+            <span class="mr-2 d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
+                <img class="img-profile rounded-circle" height="50" width="50" src="{{asset('images/person-circle-outline.svg')}}">
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
@@ -127,7 +132,11 @@
             </div>
         </li>
         @endif
-    </ul>
+        </div>
 
+        </div>
+
+    </ul>
+    </div>
 </nav>
 <!-- End of Topbar -->
