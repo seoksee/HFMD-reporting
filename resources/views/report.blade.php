@@ -100,20 +100,25 @@
             <div class="form-group row">
                 <label for="resident" class="col-md-5 col-form-label text-md-right">{{ __('Residential Area') }}<span class="col-form-label"><strong>:</strong></span></label>
 
-                <div class="col-md-6">
-                    <select name="residential_state_id" id="residential_state" class="custom-select" required >
-                        @foreach($states as $state)
-                            <option value="{{$state->id}}">{{$state->name}}</option>
-                        @endforeach
-                    </select>
-                    {{-- <select name="residential_district_id" id="residential_district" class="custom-select" required >
-                            <option value="">--Select District--</option>
-                            @foreach($districts as $district)
-                            @if($district->state_id==)
+                <div class="col-md-6 row">
+                    <div class="col-md-6">
+                        <select name="residential_state_id" id="residential_state" class="custom-select dynamic" data-dependent="residential" required >
+                            <option value="">Select State</option>
+                            @foreach($states as $state)
+                                <option value="{{$state->id}}">{{$state->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <select name="residential_district_id" id="residential_district" class="custom-select" required >
+                            <option value="1">Select District</option>
+                            {{-- @foreach($districts as $district)
+                            @if($district->state_id == 10)
                                 <option value="{{$district->id}}">{{$district->name}}</option>
                             @endif
-                            @endforeach
-                        </select> --}}
+                            @endforeach --}}
+                        </select>
+                    </div>
                 </div>
                 {{-- <div class="form-group row">
                     <div class="col-md-5"></div>
@@ -144,12 +149,20 @@
             <div class="form-group row institution">
                 <label for="school" class="col-md-5 col-form-label text-md-right">{{ __('Location of Institution') }}<span class="col-form-label"><strong>:</strong></span></label>
 
-                <div class="col-md-6">
-                    <select name="kindergarten_state_id" id="kindergarten_state" class="custom-select" required >
-                        @foreach($states as $state)
-                            <option value="{{$state->id}}">{{$state->name}}</option>
-                        @endforeach
-                    </select>
+                <div class="col-md-6 row">
+                    <div class="col-md-6">
+                        <select name="kindergarten_state_id" id="kindergarten_state" class="custom-select dynamic" data-dependent="kindergarten" required >
+                            <option value="">Select State</option>
+                            @foreach($states as $state)
+                                <option value="{{$state->id}}">{{$state->name}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <select name="kindergarten_district_id" id="kindergarten_district" class="custom-select" required >
+                            <option value="">Select District</option>
+                        </select>
+                    </div>
                     {{-- <input type="text" id="school" class="form-control" name="kindergarten_location" value="{{ old('school') }}" autofocus placeholder="District name, State"> --}}
                 </div>
             </div>
@@ -206,6 +219,32 @@
             }
         });
         $(document).ready(function () {
+            $('.dynamic').change(function(){
+                if($(this).val() != '') {
+                    var select = "state_id";
+                    var value = $(this).val();
+                    var dependent = $(this).data('dependent');
+                    var _token = "{{csrf_token()}}";
+                    $.ajax({
+                        url: "/district/fetch",
+                        method: "POST",
+                        data: {
+                            select: select,
+                            value: value,
+                            _token: _token,
+                            dependent: dependent
+                        },
+                        success: function(result){
+                            $('#'+dependent+'_district').html(result);
+                        }
+                    })
+                }
+            });
+
+            $('#residiential_state').change(function() {
+                $('residential_district').val('');
+            });
+
             validator2 = $('#add_new_report').validate({
             // ignore: ":hidden",
             rules: {
@@ -316,9 +355,10 @@
                     var diagnosis = $('input[name="diagnosis"]').val();
                     var hospital_admission = $('input[name="hospital_admission"]:checked').val();
                     var residential_state_id = $('#residential_state option:selected').val();
-                    console.log(residential_state_id);
+                    var residential_district_id = $('#residential_district option:selected').val();
                     var attend_kindergarten = $('input[name="attend_kindergarten"]:checked').val();
                     var kindergarten_state_id = $('#kindergarten_state option:selected').val();
+                    var kindergarten_district_id = $('#kindergarten_district option:selected').val();
                     var children_in_kindergarten_infected = $('input[name="children_in_kindergarten_infected"]').val();
                     var children_infected = $('input[name="children_infected"]:checked').val();
                     if(children_infected == 0) {
@@ -338,8 +378,10 @@
                     dataForm.append("diagnosis", diagnosis);
                     dataForm.append("hospital_admission", hospital_admission);
                     dataForm.append("residential_state_id", residential_state_id);
+                    dataForm.append("residential_district_id", residential_district_id);
                     dataForm.append("attend_kindergarten", attend_kindergarten);
                     dataForm.append("kindergarten_state_id", kindergarten_state_id);
+                    dataForm.append("kindergarten_district_id", kindergarten_district_id);
                     dataForm.append("children_in_kindergarten_infected", children_in_kindergarten_infected);
                     dataForm.append("document_id", document_id);
 

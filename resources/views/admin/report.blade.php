@@ -136,7 +136,13 @@
                 },
                 {data: 'symptoms', name: 'symptoms'},
                 {data: 'resident', name: 'resident'},
-                {data: 'diagnosis', name: 'diagnosis'},
+                {data: 'diagnosis',
+                    render: function(data) {
+                        if(data == null)
+                            return '-';
+                        return data;
+                    }
+                },
                 {data: 'hospital_admission',
                     render: function(data) {
                         if(data == 1)

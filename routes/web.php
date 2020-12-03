@@ -23,6 +23,7 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 Route::get('/report/create', 'ReportController@create')->name('report');
 Route::post('/report', 'ReportController@store',['as'=>'report']);
+Route::post('/district/fetch', 'ReportController@fetch');
 Route::get('/symptoms', 'HomeController@symptoms')->name('symptoms');
 Route::get('/hospitals', 'HomeController@hospitals')->name('hospitals');
 // Route::patch('/admin/report/{id}', 'ReportController@update');

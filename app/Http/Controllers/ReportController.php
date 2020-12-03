@@ -12,6 +12,7 @@ use App\State;
 use App\District;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
@@ -43,6 +44,19 @@ class ReportController extends Controller
         return view('report', compact('symptoms','states','districts'));
     }
 
+    public function fetch(Request $request) {
+        $select = $request->get('select');
+        $value = $request->get('value');
+        $data = DB::table('districts')
+                    ->where($select, $value)
+                    ->get();
+        $output = '<option value="">Select District</option>';
+        foreach ($data as $row) {
+            $output .= '<option value="' . $row->id . '">' . $row->name . '</option>';
+        }
+        echo $output;
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -57,6 +71,7 @@ class ReportController extends Controller
             'symptoms' => 'required',
             'hospital_admission' => 'required',
             'residential_state_id' => 'required',
+            'residential_district_id' => 'required',
             'attend_kindergarten' => 'required'
         ]);
         if ($validator->fails()) {

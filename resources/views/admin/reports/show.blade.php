@@ -42,9 +42,14 @@
                         <h5>{{$report->hospital ? "Yes" : "No"}}</h5>
                     </div>
                     <div class="col-sm-4 text-md-right">
-                        <h5><strong>Residential Area :</strong></h5>
+                        <h5><strong>Residential State :</strong></h5>
                     </div><div class="col-sm-6">
                         <h5>{{App\State::find($report->residential_state_id)->name}}</h5>
+                    </div>
+                    <div class="col-sm-4 text-md-right">
+                        <h5><strong>Residential District :</strong></h5>
+                    </div><div class="col-sm-6">
+                        <h5>{{App\District::find($report->residential_district_id)->name}}</h5>
                     </div>
                     <div class="col-sm-4 text-md-right">
                         <h5><strong>Attending to nursery school or kindergarten? :</strong></h5>
@@ -54,7 +59,7 @@
                     <div class="col-sm-4 text-md-right">
                         <h5><strong>Location of Institution :</strong></h5>
                     </div><div class="col-sm-6">
-                        <h5>{{$report->kindergarten_state_id ? App\State::find($report->kindergarten_state_id)->name : '-'}}</h5>
+                        <h5>{{$report->kindergarten_state_id ? App\District::find($report->kindergarten_district_id)->name . ', ' . App\State::find($report->kindergarten_state_id)->name : '-'}}</h5>
                     </div>
                     <div class="col-sm-4 text-md-right">
                         <h5><strong>Any children from the institution have infected by HFMD recently? :</strong></h5>
