@@ -73,16 +73,50 @@
                     </div>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <button class="btn btn-outline-primary dropdown-toggle" href="#" id="caseDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <span id="selection"></span>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right animated--fade-in" aria-labelledby="caseDropdown">
-                        <a class="dropdown-item" href="#" data-value="day">by Day</a>
-                        <a class="dropdown-item" href="#" data-value="week">by Week</a>
-                        <a class="dropdown-item" href="#" data-value="month">by Month</a>
-                        <a class="dropdown-item" href="#" data-value="year">by Year</a>
+                <div class="col-md-2 chart-view">
+                    <div class="">
+                        <button class="btn btn-outline-primary dropdown-toggle" href="#" id="caseDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span id="selection"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right animated--fade-in" aria-labelledby="caseDropdown" id="case1">
+                            <li><a class="dropdown-item" href="#" data-value="day">by Day</a></li>
+                            <li><a class="dropdown-item" href="#" data-value="week">by Week</a></li>
+                            <li><a class="dropdown-item" href="#" data-value="month">by Month</a></li>
+                            <li><a class="dropdown-item" href="#" data-value="year">by Year</a></li>
+                        </ul>
                     </div>
+                    <div>
+                        <br>
+                    </div>
+                    <form action="#" class="form-group" enctype="multipart/form-data">
+                        {{-- <button class="btn btn-outline-primary dropdown-toggle" href="#" id="locationDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span id="location_select">by State</span>
+                        </button> --}}
+                        <select name="state" id="state" data-dependent="district" class="custom-select animated--fade-in dynamic">
+                            <option value="">by State</option>
+                            <option value="1">Johor</option>
+                            <option value="2">Kedah</option>
+                            <option value="3">Kelantan</option>
+                            <option value="4">Melaka</option>
+                            <option value="5">Negeri Sembilan</option>
+                            <option value="6">Pahang</option>
+                            <option value="7">Pulau Pinang</option>
+                            <option value="8">Perak</option>
+                            <option value="9">Perlis</option>
+                            <option value="10">Selangor</option>
+                            <option value="11">Terengganu</option>
+                            <option value="12">Sabah</option>
+                            <option value="13">Sarawak</option>
+                            <option value="14">W.P. (KL)</option>
+                            <option value="15">W.P. (Labuan)</option>
+                            <option value="16">W.P. (Putrajaya)</option>
+                        </select>
+                        <div><br></div>
+                        <div id="district">
+
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -119,11 +153,42 @@
 
 <script>
     $('#selection').html("by Month");
-    display_line_chart("by Month")
-    $('.dropdown-menu a').click(function() {
+    display_line_chart("by Month");
+
+    $('#case1 a').click(function() {
+        console.log("clicked");
+        // $('.dynamic').remove(this.selectedIndex);
         var selText = $(this).text();
         $('#selection').html(selText);
         display_line_chart(selText);
+    });
+
+    $('.dynamic').change(function(){
+        console.log("change detected");
+        if($(this).text() != '') {
+            var select = "state_id";
+            var value = $(this).val();
+            console.log("value: " + value);
+            var dependent = $(this).data('dependent');
+            var _token = "{{csrf_token()}}";
+            var type = $('#selection').html();
+            $.ajax({
+                url: "/district-chart/fetch",
+                method: "POST",
+                data: {
+                    select: select,
+                    value: value,
+                    _token: _token,
+                    dependent: dependent,
+                    type: type.substring(3)
+                },
+                success: function(result){
+                    $('#district').html(result.district);
+                    var report_cases = result.report_cases;
+                    display_chart($('#selection').html(), report_cases);
+                }
+            })
+        }
     });
 
     function display_line_chart (value) {
@@ -327,6 +392,210 @@
                 }
             });
         }
+    }
+
+    function display_chart(value, data) {
+        if (value == "by Day"){
+            var day = data['dailyReports'];
+            var i;
+            var str="";
+            for(i=0; i<31; i++) {
+                day[i] = day[i+1];
+                if(day[i] == null){
+                    day[i] = 0;
+                }
+                if(i == 30) {
+                    str += day[i];
+                } else {
+                    str= str+day[i]+",";
+                }
+            };
+            var data_day = str.split(",");
+
+            var ctx = $('#line-chart');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data:
+                {
+                    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"],
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data:
+                        data_day
+                    ,
+                        backgroundColor: [
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        } else if (value == "by Week") {
+            var week = data['weeklyReports'];
+            var i;
+            var str="";
+            for(i=0; i<53; i++) {
+                week[i] = week[i+1];
+                if(week[i] == null){
+                    week[i] = 0;
+                }
+                if(i == 52) {
+                    str += week[i];
+                } else {
+                    str= str+week[i]+",";
+                }
+            };
+            var data_week = str.split(",");
+
+            var ctx = $('#line-chart');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data:
+                {
+                    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31",
+                            "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53"],
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data:
+                        data_week
+                    ,
+                        backgroundColor: [
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        } else if (value == "by Month") {
+            var month = data['monthlyReports'];
+            var i;
+            var str="";
+            for(i=0; i<12; i++) {
+                month[i] = month[i+1];
+                if(month[i] == null){
+                    month[i] = 0;
+                }
+                if(i == 11) {
+                    str += month[i];
+                } else {
+                    str= str+month[i]+",";
+                }
+            };
+            var data_month = str.split(",");
+
+            var ctx = $('#line-chart');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data:
+                {
+                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data:
+                        data_month
+                    ,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        } else if (value =="by Year") {
+            var year = data['yearlyReports'];
+            var i;
+            var str="";
+            for(i=2010; i<2020; i++) {
+                year[i] = year[i+1];
+                if(year[i] == null){
+                    year[i] = 0;
+                }
+                if(i == 2019) {
+                    str += year[i];
+                } else {
+                    str= str+year[i]+",";
+                }
+            };
+            var data_year = str.split(",");
+
+            var ctx = $('#line-chart');
+            var myChart = new Chart(ctx, {
+                type: 'line',
+                data:
+                {
+                    labels: ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
+                    datasets: [{
+                        label: 'Number of Cases',
+                        data:
+                        data_year
+                    ,
+                        backgroundColor: [
+                            'rgba(153, 102, 255, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(153, 102, 255, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
     }
 
 </script>

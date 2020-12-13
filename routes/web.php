@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
+Route::post('/district-chart/fetch', 'HomeController@fetch');
 Route::get('/report/create', 'ReportController@create')->name('report');
 Route::post('/report', 'ReportController@store',['as'=>'report']);
 Route::post('/district/fetch', 'ReportController@fetch');
