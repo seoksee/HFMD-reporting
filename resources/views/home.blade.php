@@ -157,7 +157,8 @@
 
     $('#case1 a').click(function() {
         console.log("clicked");
-        // $('.dynamic').remove(this.selectedIndex);
+        $('.dynamic').prop('selected', false).find('option:first').prop('selected', true);
+        $('.district-selection').prop('selected', false).find('option:first').prop('selected', true);
         var selText = $(this).text();
         $('#selection').html(selText);
         display_line_chart(selText);
@@ -185,6 +186,32 @@
                 success: function(result){
                     $('#district').html(result.district);
                     var report_cases = result.report_cases;
+                    display_chart($('#selection').html(), report_cases);
+                }
+            })
+        }
+    });
+
+    $('#district').on('change','.district-selection',function(){
+        console.log("change in district");
+        if($(this).text() != '') {
+            var select = "id";
+            var value = $(this).val();
+            console.log("value: " + value);
+            var _token = "{{csrf_token()}}";
+            var type = $('#selection').html();
+            $.ajax({
+                url: "/district-chart/fetch",
+                method: "POST",
+                data: {
+                    select: select,
+                    value: value,
+                    _token: _token,
+                    type: type.substring(3)
+                },
+                success: function(result){
+                    var report_cases = result.report_cases;
+                    console.log(report_cases);
                     display_chart($('#selection').html(), report_cases);
                 }
             })

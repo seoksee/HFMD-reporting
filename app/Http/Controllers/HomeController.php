@@ -38,63 +38,9 @@ class HomeController extends Controller
                 ->whereYear('created_at', '=', Carbon::now()->year)
                 ->where(['is_approve' => 1, 'fatal' => 1])->get();
 
-        // //daily reports for line chart
-        // $dailyReportsQuery = DB::table('reports')
-        //                         ->select(DB::raw("DAY(created_at) as day, MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-        //                         ->where('is_approve', 1)
-        //                         ->having('year', Carbon::now()->year)
-        //                         ->having('month', Carbon::now()->month)
-        //                         ->groupBy('year')
-        //                         ->groupBy('month')
-        //                         ->groupBy('day')
-        //                         ->get()->toArray();
-        // $dailyReports = array_column($dailyReportsQuery, 'numberOfCases', 'day');
-
-        // //weekly reports for line chart
-        // $weeklyReportsQuery = DB::table('reports')
-        //                         ->select(DB::raw("WEEKOFYEAR(created_at) as week, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-        //                         ->where('is_approve', 1)
-        //                         ->having('year', Carbon::now()->year)
-        //                         ->groupBy('year')
-        //                         ->groupBy('week')
-        //                         ->get()->toArray();
-        // $weeklyReports = array_column($weeklyReportsQuery, 'numberOfCases', 'week');
-
-        // //monthlyreports for line chart
-        // if($state == '') {
-        //     $monthlyReportsQuery = DB::table('reports')
-        //                             ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-        //                             ->where('is_approve', 1)
-        //                             ->having('year', Carbon::now()->year)
-        //                             ->groupBy('year')
-        //                             ->groupBy('month')
-        //                             ->get()->toArray();
-        //     $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
-        // } else {
-        //     $monthlyReportsQuery = DB::table('reports')
-        //                             ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-        //                             ->where('is_approve', 1)
-        //                             ->where('residential_state_id', $state)
-        //                             ->having('year', Carbon::now()->year)
-        //                             ->groupBy('year')
-        //                             ->groupBy('month')
-        //                             ->get()->toArray();
-        //     $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
-        // }
-
-        // //yearly reports for line chart
-        // $yearlyReportsQuery = DB::table('reports')
-        //                     ->select(DB::raw("YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-        //                     ->where('is_approve', 1)
-        //                     ->having('year', '<=', Carbon::now()->year)
-        //                     ->having('year', '>', Carbon::now()->year-10)
-        //                     ->groupBy('year')
-        //                     ->get()->toArray();
-        // $yearlyReports = array_column($yearlyReportsQuery, 'numberOfCases', 'year');
-
         //getting reports for line chart
         $report_cases = $this->report_cases('');
-            // dd($report_cases);
+
         //getting verified reports
         $verified_reports = Report::whereMonth('created_at', '=', Carbon::now()->month)
                     ->whereYear('created_at','=', Carbon::now()->year)
@@ -127,28 +73,23 @@ class HomeController extends Controller
         $data = DB::table('districts')
                     ->where($select, $value)
                     ->get();
-        $output = '<select name="district" class="custom-select animated--fade-in dynamic">
+        $output = '<select name="district" class="custom-select animated--fade-in district-selection">
                     <option value="">by District</option>';
         foreach($data as $row) {
             $output .= '<option value="' . $row->id .'">' . $row->name . '</option>';
         }
         $output .= '</select>';
-        // echo $output;
-        // $sen['result'] = $output;
-        // $monthlyReportsQuery = DB::table('reports')
-        // ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-        // ->where('is_approve', 1)
-        // ->where('residential_state_id', $value)
-        // ->having('year', Carbon::now()->year)
-        //     ->groupBy('year')
-        //     ->groupBy('month')
-        //     ->get()->toArray();
-        // $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
-        $report_cases = $this->report_cases('state', $value);
+        if($select == 'state_id') {
+            $report_cases = $this->report_cases('state', $value);
+        } else {
+            $report_cases = $this->report_cases('district', $value);
+        }
+
         $result = [
             'district' => $output,
             'report_cases' => $report_cases
         ];
+
         return response()->json($result);
     }
 
@@ -181,109 +122,80 @@ class HomeController extends Controller
     }
 
     public function report_cases($location, $id=''){
-        if($location == '') {
-            //daily reports for line chart
-            $dailyReportsQuery = DB::table('reports')
-                ->select(DB::raw("DAY(created_at) as day, MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->having('year', Carbon::now()->year)
-                ->having('month', Carbon::now()->month)
-                ->groupBy('year')
-                ->groupBy('month')
-                ->groupBy('day')
-                ->get()->toArray();
-            $dailyReports = array_column($dailyReportsQuery, 'numberOfCases', 'day');
+        //daily reports for line chart
+        $dailyReportsQuery = DB::table('reports')
+            ->select(DB::raw("DAY(created_at) as day, MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+            ->where('is_approve', 1)
+            ->having('year', Carbon::now()->year)
+            ->having('month', Carbon::now()->month)
+            ->groupBy('year')
+            ->groupBy('month')
+            ->groupBy('day');
 
-            //weekly reports for line chart
-            $weeklyReportsQuery = DB::table('reports')
-                ->select(DB::raw("WEEKOFYEAR(created_at) as week, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->having('year', Carbon::now()->year)
-                ->groupBy('year')
-                ->groupBy('week')
-                ->get()->toArray();
-            $weeklyReports = array_column($weeklyReportsQuery, 'numberOfCases', 'week');
+        //weekly reports for line chart
+        $weeklyReportsQuery = DB::table('reports')
+            ->select(DB::raw("WEEKOFYEAR(created_at) as week, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+            ->where('is_approve', 1)
+            ->having('year', Carbon::now()->year)
+            ->groupBy('year')
+            ->groupBy('week');
 
-            //monthlyreports for line chart
-            $monthlyReportsQuery = DB::table('reports')
-                ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->having('year', Carbon::now()->year)
-                ->groupBy('year')
-                ->groupBy('month')
-                ->get()->toArray();
-            $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
+         //monthlyreports for line chart
+        $monthlyReportsQuery = DB::table('reports')
+            ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+            ->where('is_approve', 1)
+            ->having('year', Carbon::now()->year)
+            ->groupBy('year')
+            ->groupBy('month');
 
-            //yearly reports for line chart
-            $yearlyReportsQuery = DB::table('reports')
-                ->select(DB::raw("YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->having('year', '<=', Carbon::now()->year)
-                ->having('year', '>', Carbon::now()->year - 10)
-                ->groupBy('year')
-                ->get()->toArray();
-            $yearlyReports = array_column($yearlyReportsQuery, 'numberOfCases', 'year');
+        //yearly reports for line chart
+        $yearlyReportsQuery = DB::table('reports')
+            ->select(DB::raw("YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+            ->where('is_approve', 1)
+            ->having('year', '<=', Carbon::now()->year)
+            ->having('year', '>', Carbon::now()->year - 10)
+            ->groupBy('year');
 
-            $reports = [
-                'dailyReports' => $dailyReports,
-                'weeklyReports' => $weeklyReports,
-                'monthlyReports' => $monthlyReports,
-                'yearlyReports' => $yearlyReports
-            ];
-        } else if ($location == 'state') {
-            //daily reports for line chart
-            $dailyReportsQuery = DB::table('reports')
-                ->select(DB::raw("DAY(created_at) as day, MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->where('residential_state_id', $id)
-                ->having('year', Carbon::now()->year)
-                ->having('month', Carbon::now()->month)
-                ->groupBy('year')
-                ->groupBy('month')
-                ->groupBy('day')
-                ->get()->toArray();
-            $dailyReports = array_column($dailyReportsQuery, 'numberOfCases', 'day');
+        if ($location == 'state') {
+            $dailyReportsQuery = $dailyReportsQuery
+                ->where('residential_state_id', $id);
 
-            //weekly reports for line chart
-            $weeklyReportsQuery = DB::table('reports')
-                ->select(DB::raw("WEEKOFYEAR(created_at) as week, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->where('residential_state_id', $id)
-                ->having('year', Carbon::now()->year)
-                ->groupBy('year')
-                ->groupBy('week')
-                ->get()->toArray();
-            $weeklyReports = array_column($weeklyReportsQuery, 'numberOfCases', 'week');
+            $weeklyReportsQuery = $weeklyReportsQuery
+                ->where('residential_state_id', $id);
 
-            //monthlyreports for line chart
-            $monthlyReportsQuery = DB::table('reports')
-                ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->where('residential_state_id', $id)
-                ->having('year', Carbon::now()->year)
-                ->groupBy('year')
-                ->groupBy('month')
-                ->get()->toArray();
-            $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
+            $monthlyReportsQuery = $monthlyReportsQuery
+                ->where('residential_state_id', $id);
 
-            //yearly reports for line chart
-            $yearlyReportsQuery = DB::table('reports')
-                ->select(DB::raw("YEAR(created_at) as year, COUNT(*) as numberOfCases"))
-                ->where('is_approve', 1)
-                ->where('residential_state_id', $id)
-                ->having('year', '<=', Carbon::now()->year)
-                ->having('year', '>', Carbon::now()->year - 10)
-                ->groupBy('year')
-                ->get()->toArray();
-            $yearlyReports = array_column($yearlyReportsQuery, 'numberOfCases', 'year');
+            $yearlyReportsQuery = $yearlyReportsQuery
+                ->where('residential_state_id', $id);
 
-            $reports = [
-                'dailyReports' => $dailyReports,
-                'weeklyReports' => $weeklyReports,
-                'monthlyReports' => $monthlyReports,
-                'yearlyReports' => $yearlyReports
-            ];
+        } else if ($location == 'district') {
+            $dailyReportsQuery = $dailyReportsQuery
+                ->where('residential_district_id', $id);
+            $weeklyReportsQuery = $weeklyReportsQuery
+                ->where('residential_district_id', $id);
+            $monthlyReportsQuery = $monthlyReportsQuery
+                ->where('residential_district_id', $id);
+            $yearlyReportsQuery = $yearlyReportsQuery
+                ->where('residential_district_id', $id);
         }
+
+        $dailyReportsQuery = $dailyReportsQuery->get()->toArray();
+        $weeklyReportsQuery = $weeklyReportsQuery->get()->toArray();
+        $monthlyReportsQuery = $monthlyReportsQuery->get()->toArray();
+        $yearlyReportsQuery = $yearlyReportsQuery->get()->toArray();
+
+        $dailyReports = array_column($dailyReportsQuery, 'numberOfCases', 'day');
+        $weeklyReports = array_column($weeklyReportsQuery, 'numberOfCases', 'week');
+        $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
+        $yearlyReports = array_column($yearlyReportsQuery, 'numberOfCases', 'year');
+
+        $reports = [
+            'dailyReports' => $dailyReports,
+            'weeklyReports' => $weeklyReports,
+            'monthlyReports' => $monthlyReports,
+            'yearlyReports' => $yearlyReports
+        ];
         return $reports;
     }
 
