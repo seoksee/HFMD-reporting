@@ -180,15 +180,10 @@ class HomeController extends Controller
                 ->where('residential_district_id', $id);
         }
 
-        $dailyReportsQuery = $dailyReportsQuery->get()->toArray();
-        $weeklyReportsQuery = $weeklyReportsQuery->get()->toArray();
-        $monthlyReportsQuery = $monthlyReportsQuery->get()->toArray();
-        $yearlyReportsQuery = $yearlyReportsQuery->get()->toArray();
-
-        $dailyReports = array_column($dailyReportsQuery, 'numberOfCases', 'day');
-        $weeklyReports = array_column($weeklyReportsQuery, 'numberOfCases', 'week');
-        $monthlyReports = array_column($monthlyReportsQuery, 'numberOfCases', 'month');
-        $yearlyReports = array_column($yearlyReportsQuery, 'numberOfCases', 'year');
+        $dailyReports = array_column($dailyReportsQuery->get()->toArray(), 'numberOfCases', 'day');
+        $weeklyReports = array_column($weeklyReportsQuery->get()->toArray(), 'numberOfCases', 'week');
+        $monthlyReports = array_column($monthlyReportsQuery->get()->toArray(), 'numberOfCases', 'month');
+        $yearlyReports = array_column($yearlyReportsQuery->get()->toArray(), 'numberOfCases', 'year');
 
         $reports = [
             'dailyReports' => $dailyReports,

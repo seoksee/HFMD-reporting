@@ -153,7 +153,7 @@
 
 <script>
     $('#selection').html("by Month");
-    display_line_chart("by Month");
+    display_chart("by Month", '');
 
     $('#case1 a').click(function() {
         console.log("clicked");
@@ -161,7 +161,11 @@
         $('.district-selection').prop('selected', false).find('option:first').prop('selected', true);
         var selText = $(this).text();
         $('#selection').html(selText);
-        display_line_chart(selText);
+        // if($('.district-selection').val() != '') {
+        //     console.log("im here");
+        //     display_chart(selText, report_cases);
+        // }
+        display_chart(selText, '');
     });
 
     $('.dynamic').change(function(){
@@ -211,219 +215,19 @@
                 },
                 success: function(result){
                     var report_cases = result.report_cases;
-                    console.log(report_cases);
                     display_chart($('#selection').html(), report_cases);
                 }
             })
         }
     });
 
-    function display_line_chart (value) {
-        if (value == "by Day"){
-            var day = <?php echo $dailyReports; ?>;
-            var i;
-            var str="";
-            for(i=0; i<31; i++) {
-                day[i] = day[i+1];
-                if(day[i] == null){
-                    day[i] = 0;
-                }
-                if(i == 30) {
-                    str += day[i];
-                } else {
-                    str= str+day[i]+",";
-                }
-            };
-            var data_day = str.split(",");
-
-            var ctx = $('#line-chart');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data:
-                {
-                    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"],
-                    datasets: [{
-                        label: 'Number of Cases',
-                        data:
-                        data_day
-                    ,
-                        backgroundColor: [
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(75, 192, 192, 1)',
-                            'rgba(153, 102, 255, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-        } else if (value == "by Week") {
-            var week = <?php echo $weeklyReports; ?>;
-            var i;
-            var str="";
-            for(i=0; i<53; i++) {
-                week[i] = week[i+1];
-                if(week[i] == null){
-                    week[i] = 0;
-                }
-                if(i == 52) {
-                    str += week[i];
-                } else {
-                    str= str+week[i]+",";
-                }
-            };
-            var data_week = str.split(",");
-
-            var ctx = $('#line-chart');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data:
-                {
-                    labels: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31",
-                            "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53"],
-                    datasets: [{
-                        label: 'Number of Cases',
-                        data:
-                        data_week
-                    ,
-                        backgroundColor: [
-                            'rgba(255, 206, 86, 0.2)',
-                            'rgba(255, 159, 64, 0.2)'
-                        ],
-                        borderColor: [
-                            'rgba(255, 206, 86, 1)',
-                            'rgba(255, 159, 64, 1)'
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-        } else if (value == "by Month") {
-            var month = <?php echo $monthlyReports; ?>;
-            var i;
-            var str="";
-            for(i=0; i<12; i++) {
-                month[i] = month[i+1];
-                if(month[i] == null){
-                    month[i] = 0;
-                }
-                if(i == 11) {
-                    str += month[i];
-                } else {
-                    str= str+month[i]+",";
-                }
-            };
-            var data_month = str.split(",");
-
-            var ctx = $('#line-chart');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data:
-                {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                    datasets: [{
-                        label: 'Number of Cases',
-                        data:
-                        data_month
-                    ,
-                        backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                        ],
-                        borderColor: [
-                            'rgba(255, 99, 132, 1)',
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-        } else if (value =="by Year") {
-            var year = <?php echo $yearlyReports; ?>;
-            var i;
-            var str="";
-            for(i=2010; i<2020; i++) {
-                year[i] = year[i+1];
-                if(year[i] == null){
-                    year[i] = 0;
-                }
-                if(i == 2019) {
-                    str += year[i];
-                } else {
-                    str= str+year[i]+",";
-                }
-            };
-            var data_year = str.split(",");
-
-            var ctx = $('#line-chart');
-            var myChart = new Chart(ctx, {
-                type: 'line',
-                data:
-                {
-                    labels: ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
-                    datasets: [{
-                        label: 'Number of Cases',
-                        data:
-                        data_year
-                    ,
-                        backgroundColor: [
-                            'rgba(153, 102, 255, 0.2)',
-                        ],
-                        borderColor: [
-                            'rgba(153, 102, 255, 1)',
-                        ],
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
-                    }
-                }
-            });
-        }
-    }
-
     function display_chart(value, data) {
         if (value == "by Day"){
-            var day = data['dailyReports'];
+            if (data == '') {
+                var day = <?php echo $dailyReports; ?>;
+            } else {
+                var day = data['dailyReports'];
+            }
             var i;
             var str="";
             for(i=0; i<31; i++) {
@@ -478,7 +282,11 @@
                 }
             });
         } else if (value == "by Week") {
-            var week = data['weeklyReports'];
+            if (data == '') {
+                var week = <?php echo $weeklyReports; ?>;
+            } else {
+                var week = data['weeklyReports'];
+            }
             var i;
             var str="";
             for(i=0; i<53; i++) {
@@ -528,7 +336,12 @@
                 }
             });
         } else if (value == "by Month") {
-            var month = data['monthlyReports'];
+            if (data == '') {
+                console.log("value is null");
+                var month = <?php echo $monthlyReports; ?>;
+            } else {
+                var month = data['monthlyReports'];
+            }
             var i;
             var str="";
             for(i=0; i<12; i++) {
@@ -575,7 +388,11 @@
                 }
             });
         } else if (value =="by Year") {
-            var year = data['yearlyReports'];
+            if (data == '') {
+                var year = <?php echo $yearlyReports; ?>;
+            } else {
+                var year = data['yearlyReports'];
+            }
             var i;
             var str="";
             for(i=2010; i<2020; i++) {
