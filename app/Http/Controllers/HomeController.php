@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\District;
 use Illuminate\Http\Request;
 use App\Report;
+use App\State;
 use App\Symptom;
 use Carbon\Carbon;
 use Facade\FlareClient\Http\Response;
@@ -57,8 +59,26 @@ class HomeController extends Controller
                 }
             }
         }
+
+        //notice
+        $two_weeks_from_now = Carbon::now()->subWeek(2)->format('Y-m-d h:m:s');
+        $states = State::get();
+        $outbreak = null;
+        foreach ($states as $state) {
+            $districts = District::where(['state_id' => $state->id])->get();
+            foreach ($districts as $district) {
+                $cases = DB::table('reports')->select(DB::raw("COUNT(*) as numberOfCases"))->where('is_approve', 1)->where('created_at', '>', $two_weeks_from_now)->where('residential_district_id', $district->id)->get()->toArray();
+                if ($cases[0]->numberOfCases >= 3) {
+                    $outbreak .= $district->name . ", " . $state->name . " ";
+                }
+            }
+        }
+        // $outbreak = Report::where('created_at', '>', $two_weeks_from_now)
+        //             ->where(['is_approve' => 1])->get();
+                // dd($outbreak);
+
         // dd($cases_in_states);
-        return view('home', compact('reports', 'fatal'))
+        return view('home', compact('reports', 'fatal', 'outbreak'))
                 ->with(['dailyReports' => json_encode($report_cases['dailyReports'], JSON_NUMERIC_CHECK),
                         'weeklyReports' => json_encode($report_cases['weeklyReports'], JSON_NUMERIC_CHECK),
                         'monthlyReports'=> json_encode($report_cases['monthlyReports'], JSON_NUMERIC_CHECK),

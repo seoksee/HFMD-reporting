@@ -57,6 +57,22 @@
 
     </div>
 
+@if($outbreak != "")
+    <div class="row justify-content-center mb-5">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="card border-bottom-danger">
+                <div class="card-body">
+                    <marquee behavior="scroll" direction="left" scrollamount="8">
+                        Outbreak detected! There are more than 3 verified cases at <strong>{{$outbreak}}</strong> in the past 14 days.
+                    </marquee>
+                </div>
+            </div>
+        </div>
+        <div class="col-2"></div>
+    </div>
+@endif
+
     <div class="">
         <div class="card shadow mb-4">
             <!-- Card Header - Dropdown -->
@@ -152,6 +168,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
 <script>
+    console.log("outbreak: " + "{{$outbreak}}");
     $('#selection').html("by Month");
     display_chart("by Month", '');
 
