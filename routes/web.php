@@ -22,6 +22,7 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 Route::post('/district-chart/fetch', 'HomeController@fetch');
+Route::post('/symptoms-chart/fetch', 'HomeController@fetchSymptoms');
 Route::get('/report/create', 'ReportController@create')->name('report');
 Route::post('/report', 'ReportController@store',['as'=>'report']);
 Route::post('/district/fetch', 'ReportController@fetch');

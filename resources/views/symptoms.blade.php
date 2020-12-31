@@ -9,20 +9,29 @@
 
     <div class="container container-fluid p-5">
         <div class="card shadow mb-4">
-                <!-- Card Header - Dropdown -->
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h3 class="m-0 font-weight-bold text-primary">Occurence of Symptoms</h3>
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h3 class="m-0 font-weight-bold text-primary">Occurence of Symptoms</h3>
+                <div class="">
+                    {{-- <label><strong>Select Year :</strong></label><br/> --}}
+                    <select id="year" name="year" class="custom-select animated--fade-in dynamic">
+                        <option value="">All Year</option>
+                        @for($i = Carbon::now(); $i > Carbon::now()->subYear(5); $i= $i->subYear())
+                            <option value="{{$i->year}}">{{$i->year}}</option>
+                        @endfor
+                    </select>
                 </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div style="overflow-x: scroll">
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div style="overflow-x: scroll">
                     <div class="chart-container" style="position: relative;  width:900px;">
                     {{-- <canvas id="myAreaChart"></canvas> --}}
-                    <canvas id="symptomsChart"></canvas>
+                        <canvas id="symptomsChart"></canvas>
                     </div>
                 </div>
-              </div>
             </div>
+        </div>
 
 
     </div>
@@ -31,10 +40,44 @@
 @section('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 <script>
-    var symptomsName = <?php echo json_encode($symptomsName); ?>;
-    var symptomsCount = <?php echo json_encode($symptomsCount); ?>;
+    $(document).ready(function() {
+        // $('#year').multiselect({
+        //     nonSelectedText: 'Select Year',
+        //     enableFiltering: true,
+        //     enableCaseInsensitiveFiltering: true,
+        //     buttonWidth:'400px'
+        // });
+        var symptomsName = <?php echo json_encode($symptomsName); ?>;
+        var symptomsCount = <?php echo json_encode($symptomsCount); ?>;
+        display_chart(symptomsName, symptomsCount);
+    });
 
-    var ctx = document.getElementById('symptomsChart').getContext('2d');
+    $('.dynamic').change(function(){
+        console.log("change detected");
+        if($(this).text() != '') {
+            // var select = "state_id";
+            var value = $(this).val();
+            console.log("value: " + value);
+            // var dependent = $(this).data('dependent');
+            var _token = "{{csrf_token()}}";
+            $.ajax({
+                url: "/symptoms-chart/fetch",
+                method: "POST",
+                data: {
+                    value: value,
+                    _token: _token,
+                },
+                success: function(result){
+                    display_chart(result.symptomsName, result.symptomsCount);
+                }
+            })
+        }
+    });
+
+
+
+    function display_chart(symptomsName, symptomsCount) {
+        var ctx = document.getElementById('symptomsChart').getContext('2d');
     var randomColourPlugin = {
 
         beforeUpdate: function(chart){
@@ -92,5 +135,7 @@
             }
         }
     });
+    }
+
     </script>
 @endsection

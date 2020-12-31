@@ -111,7 +111,7 @@
                     </div>
                     <div class="col-md-6">
                         <select name="residential_district_id" id="residential_district" class="custom-select" required >
-                            <option value="1">Select District</option>
+                            <option value="">Select District</option>
                             {{-- @foreach($districts as $district)
                             @if($district->state_id == 10)
                                 <option value="{{$district->id}}">{{$district->name}}</option>

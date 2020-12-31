@@ -137,6 +137,43 @@ class HomeController extends Controller
         return view('symptoms', compact('symptomsCount', 'symptomsName'));
     }
 
+    public function fetchSymptoms(Request $request)
+    {
+        $value = $request->get('value');
+        if($value != null) {
+            $reports = Report::select('symptoms')->whereYear('created_at', '=', $value)->get();
+        } else {
+            $reports = Report::select('symptoms')->get();
+        }
+
+        $symptoms = Symptom::select('name')->get();
+        $symptomsName = [];
+
+        foreach ($symptoms as $symptom) {
+            array_push($symptomsName, $symptom->name);
+        }
+
+        $numOfSymptoms = count($symptoms);
+        for ($i = 0; $i < $numOfSymptoms; $i++) {
+            $symptomsCount[$i] = 0;
+        }
+
+        foreach($reports as $row) {
+            $count = $row->symptoms;
+            foreach(explode(',', $count) as $id) {
+                $symptomsCount[$id-1]++;
+            }
+        }
+
+
+        $result = [
+            'symptomsCount' => $symptomsCount,
+            'symptomsName' => $symptomsName
+        ];
+
+        return response()->json($result);
+    }
+
     public function hospitals(){
         return view('hospitals');
     }
