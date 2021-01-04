@@ -10,9 +10,11 @@ use App\Report;
 use Illuminate\Support\Facades\Mail;
 use App\State;
 use App\District;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Twilio\Rest\Client;
 
 class ReportController extends Controller
 {
@@ -97,6 +99,7 @@ class ReportController extends Controller
         }
         // dd($request->children_in_kindergarten_infected);
 
+        //send notification email to the user
         $user->reports()->create($input);
         $message = "Your report has been received and waiting review by an admin.";
 
@@ -109,8 +112,25 @@ class ReportController extends Controller
             $message->to($user->email, $user->name)->subject('Reporting on HFMD reporting system');
         });
 
+        //send notification sms to an admin
+        $admin = User::where(['role_id'=> '1'])->firstOrFail();
+        $message = "There is a new reported case on " . Carbon::now()->format('Y-m-d H:i:s');
+        $this->sendMessage($message, $admin->phone);
+
         // return redirect('/')->with('alert', $message);
         return response()->json(['success' => 'Report created successfully.']);
+    }
+
+    private function sendMessage($message, $recipients)
+    {
+        $account_sid = getenv("TWILIO_SID");
+        $auth_token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio_number = getenv("TWILIO_NUMBER");
+        $client = new Client($account_sid, $auth_token);
+        $client->messages->create(
+            $recipients,
+            ['from' => $twilio_number, 'body' => $message]
+        );
     }
 
     /**
