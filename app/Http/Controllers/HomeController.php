@@ -83,6 +83,7 @@ class HomeController extends Controller
                         'weeklyReports' => json_encode($report_cases['weeklyReports'], JSON_NUMERIC_CHECK),
                         'monthlyReports'=> json_encode($report_cases['monthlyReports'], JSON_NUMERIC_CHECK),
                         'yearlyReports' => json_encode($report_cases['yearlyReports'], JSON_NUMERIC_CHECK),
+                        'month_labels' => json_encode($report_cases['month_labels'], JSON_NUMERIC_CHECK),
                         'cases_in_states' => json_encode($cases_in_states)]);
     }
 
@@ -199,9 +200,9 @@ class HomeController extends Controller
 
          //monthlyreports for line chart
         $monthlyReportsQuery = DB::table('reports')
-            ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, COUNT(*) as numberOfCases"))
+            ->select(DB::raw("MONTH(created_at) as month, YEAR(created_at) as year, ifnull(COUNT(*),0) as numberOfCases"))
             ->where('is_approve', 1)
-            ->having('year', Carbon::now()->year)
+            ->whereBetween('created_at', [Carbon::now()->subMonth(12)->format('Y-m-d h:m:s'), Carbon::now()->addMonth(1)->format('Y-m-d h:m:s')])
             ->groupBy('year')
             ->groupBy('month');
 
@@ -242,12 +243,41 @@ class HomeController extends Controller
         $monthlyReports = array_column($monthlyReportsQuery->get()->toArray(), 'numberOfCases', 'month');
         $yearlyReports = array_column($yearlyReportsQuery->get()->toArray(), 'numberOfCases', 'year');
 
+        $str = "";
+        for($i=0; $i<12; $i++){
+            if(empty($monthlyReports[$i+1])) {
+                $monthlyReports[$i] = 0;
+            } else {
+                $monthlyReports[$i] = $monthlyReports[$i + 1];
+            }
+            if($i == 11){
+                $str .= $monthlyReports[$i];
+            } else {
+                $str = $str . $monthlyReports[$i] . ",";
+            }
+        }
+        $month = explode(',', $str);
+
+        for ($i = 0, $j = Carbon::now()->subMonths(11)->month; $i < 12; $i++, $j = Carbon::now()->addMonths($i+1)->month-1) {
+            $data_month[$i] = $month[$j];
+            if($i==0){
+                $date = '2020-'.($j).'-14';
+            } else {
+                $date = '2020-' . ($j + 1) . '-14';
+            }
+            $month_label[$i] = Carbon::parse($date)->isoFormat('MMM');
+        }
+
+        // dd($data_month);
+
         $reports = [
             'dailyReports' => $dailyReports,
             'weeklyReports' => $weeklyReports,
-            'monthlyReports' => $monthlyReports,
-            'yearlyReports' => $yearlyReports
+            'monthlyReports' => $data_month,
+            'yearlyReports' => $yearlyReports,
+            'month_labels' => $month_label
         ];
+        // dd($reports);
         return $reports;
     }
 

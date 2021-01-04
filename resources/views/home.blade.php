@@ -356,34 +356,36 @@
             if (data == '') {
                 console.log("value is null");
                 var month = <?php echo $monthlyReports; ?>;
+                var label = <?php echo $month_labels; ?>;
             } else {
                 var month = data['monthlyReports'];
+                var label = data['month_labels'];
             }
-            var i;
-            var str="";
-            for(i=0; i<12; i++) {
-                month[i] = month[i+1];
-                if(month[i] == null){
-                    month[i] = 0;
-                }
-                if(i == 11) {
-                    str += month[i];
-                } else {
-                    str= str+month[i]+",";
-                }
-            };
-            var data_month = str.split(",");
+            // var i;
+            // var str="";
+            // for(i=0; i<12; i++) {
+            //     month[i] = month[i+1];
+            //     if(month[i] == null){
+            //         month[i] = 0;
+            //     }
+            //     if(i == 11) {
+            //         str += month[i];
+            //     } else {
+            //         str= str+month[i]+",";
+            //     }
+            // };
+            // var data_month = str.split(",");
 
             var ctx = $('#line-chart');
             var myChart = new Chart(ctx, {
                 type: 'line',
                 data:
                 {
-                    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                    labels: label,
                     datasets: [{
                         label: 'Number of Cases',
                         data:
-                        data_month
+                        month
                     ,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
@@ -412,12 +414,12 @@
             }
             var i;
             var str="";
-            for(i=2010; i<2020; i++) {
+            for(i={{Carbon::now()->subYear(10)->format('Y')}}; i<{{Carbon::now()->format('Y')}}; i++) {
                 year[i] = year[i+1];
                 if(year[i] == null){
                     year[i] = 0;
                 }
-                if(i == 2019) {
+                if(i == {{Carbon::now()->subYear()->year}}) {
                     str += year[i];
                 } else {
                     str= str+year[i]+",";
@@ -430,7 +432,7 @@
                 type: 'line',
                 data:
                 {
-                    labels: ["2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020"],
+                    labels: ["2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"],
                     datasets: [{
                         label: 'Number of Cases',
                         data:
