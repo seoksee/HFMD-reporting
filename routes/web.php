@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,3 +65,5 @@ Route::group(['middleware'=>'admin'], function(){
     Route::post('/admin/notifications/editData', 'AdminNotificationsController@editData');
     Route::post('/admin/notifications/deleteData', 'AdminNotificationsController@deleteData');
 });
+
+URL::forceScheme('https');
