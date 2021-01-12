@@ -88,20 +88,36 @@
         $('#data-table').on('change', '.role-class', function (event, state) {
         var status = $(this).prop('checked') == true ? 1 : 2;
         var user_id = $(this).data('id');
+        if(user_id == 1) {
+            console.log("user id is 1");
+             var check = $("input[data-id='1']").prop('checked', true);
+             console.log(check);
+        }
         $.ajax({
             type: "GET",
             dataType: "json",
             url: '/changeRole',
             data: {'role_id': status, 'id': user_id},
             success: function(data){
-            //   alert(data.success)
-            swal({
+                if(data.success) {
+                    swal({
                     icon: 'success',
                     title: 'Role changed successfully!\n',
                     button: false,
                     timer: 1500
-                });
+                    });
+                } else {
+                    swal({
+                    title: "Cannot change user 1's role.",
+                    icon: "warning",
+                    confirmButtonClass: "btn btn-secondary",
+                    });
+
+                }
             },
+            error: function(data) {
+
+            }
         });
     });
     </script>

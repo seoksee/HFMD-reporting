@@ -96,6 +96,9 @@ class AdminManageUsersController extends Controller
 
     public function changeRole(Request $request)
     {
+        if($request->id == 1) {
+            return response()->json(['error' => 'Cannot change user 1\'s role.']);
+        }
         $user = User::find($request->id);
         $user->role_id = $request->role_id;
         $user->save();
