@@ -66,4 +66,3 @@ Route::group(['middleware'=>'admin'], function(){
     Route::post('/admin/notifications/deleteData', 'AdminNotificationsController@deleteData');
 });
 
-URL::forceScheme('https');
