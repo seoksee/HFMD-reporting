@@ -7,6 +7,7 @@ use App\Symptom;
 use Carbon\Carbon;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class AdminSymptomsController extends Controller
 {
@@ -42,7 +43,11 @@ class AdminSymptomsController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editSymptom">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteSymptom">Delete</a>';
+                    if(DB::table('reports')->where('symptoms', $row->id)->doesntExist()){
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteSymptom">Delete</a>';
+                    } else {
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-secondary btn-sm deleteSymptom disabled">Delete</a>';
+                    }
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -75,7 +80,7 @@ class AdminSymptomsController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
         }
-        
+
         Symptom::updateOrCreate(
             ['id' => $request->symptom_id],
             ['name' => $request->name]

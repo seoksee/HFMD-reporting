@@ -175,6 +175,7 @@
     $('#case1 a').click(function() {
         console.log("clicked");
         $('.dynamic').prop('selected', false).find('option:first').prop('selected', true);
+        $('#district').html("");
         $('.district-selection').prop('selected', false).find('option:first').prop('selected', true);
         var selText = $(this).text();
         $('#selection').html(selText);

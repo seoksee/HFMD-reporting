@@ -77,7 +77,7 @@
                                     <button class="close" type="button" data-dismiss="modal">&times;</button>
                                 </div>
                                 <div class="modal-body">
-                                    <img src="{{$report->document ? $report->document->file : ''}}" alt="" class="img-responsive">
+                                    {{-- <img src="{{$report->document ? $report->document->file : ''}}" alt="" class="img-responsive"> --}}
                                     <embed src="{{$report->document ? $report->document->file : ''}}" type="" height="100%" width="100%" class="embed-responsive">
                                 </div>
                             </div>
