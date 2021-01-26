@@ -43,7 +43,7 @@ class AdminSymptomsController extends Controller
                 ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editSymptom">Edit</a>';
-                    if(DB::table('reports')->where('symptoms', $row->id)->doesntExist()){
+                    if(DB::table('reports')->whereRaw('FIND_IN_SET(?, symptoms)',[$row->id])->doesntExist()){
                         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteSymptom">Delete</a>';
                     } else {
                         $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-secondary btn-sm deleteSymptom disabled">Delete</a>';
