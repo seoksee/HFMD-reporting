@@ -22,6 +22,7 @@
                     <th>ID</th>
                     <th>Name of Symptoms</th>
                     <th>Action</th>
+                    <th>Hide Status</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,10 +93,21 @@
             },
         },
         columns: [
-            {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+            {data: 'id', name: 'id'},
             {data: 'name', name: 'name'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
-        ]
+            {data: 'hide',
+                render: function(data, type, row) {
+                    if(data == 1 ) {
+                        return '<input data-id=' + row.id + ' class="hide-class" type="checkbox" data-onstyle="danger" data-offstyle="success" data-on="Hide" data-off="Show"'  + ' checked>';
+                    }
+                    return '<input data-id=' + row.id + ' class="hide-class" type="checkbox" data-onstyle="danger" data-offstyle="success" data-on="Hide" data-off="Show"'  + '>';
+                }
+            }
+        ],
+        rowCallback: function ( row, data ) {
+        $('input.hide-class', row).prop( 'data-toggle="toggle" checked', data.role_id == 1 ).bootstrapToggle({width: "100px"});
+        }
     });
 
     // console.log(table);
@@ -209,6 +221,31 @@
                 swal("Did nothing :)", "Your symptom is safe", "info");
             }
             });
+    });
+
+    $('#data-table').on('change', '.hide-class', function (event, state) {
+        var status = $(this).prop('checked') == true ? 1 : 0;
+        var symptom_id = $(this).data('id');
+        $.ajax({
+            type: "GET",
+            dataType: "json",
+            url: '/hideSymptom',
+            data: {'hide': status, 'id': symptom_id},
+            success: function(data){
+                if(data.success) {
+                    swal({
+                    icon: 'success',
+                    title: 'Hide status changed successfully!\n',
+                    button: false,
+                    timer: 1500
+                    });
+                } else {
+                }
+            },
+            error: function(data) {
+
+            }
+        });
     });
 
 </script>

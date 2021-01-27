@@ -7,6 +7,7 @@ use App\Symptom;
 use Carbon\Carbon;
 use DataTables;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class AdminSymptomsController extends Controller
 {
@@ -39,10 +40,14 @@ class AdminSymptomsController extends Controller
     public function getTableData(Request $request){
             $data = Symptom::latest()->get();
             return Datatables::of($data)
-                ->addIndexColumn()
                 ->addColumn('action', function ($row) {
                     $btn = '<a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Edit" class="edit btn btn-primary btn-sm editSymptom">Edit</a>';
-                    $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteSymptom">Delete</a>';
+                    if(DB::table('reports')->whereRaw('FIND_IN_SET(?, symptoms)',[$row->id])->doesntExist()){
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-danger btn-sm deleteSymptom">Delete</a>';
+                    } else {
+                        $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltipV" data-id="' . $row->id . '" data-original-title="Delete" class="delete btn btn-secondary btn-sm deleteSymptom disabled">Delete</a>';
+                    }
+                    // $btn = $btn . ' <a href="javascript:void(0)" data-toggle="tooltip" data-id="' . $row->id . '" data-original-title="Hide" class="hide btn btn-success btn-sm hideSymptom">Hide</a>';
                     return $btn;
                 })
                 ->rawColumns(['action'])
@@ -75,7 +80,7 @@ class AdminSymptomsController extends Controller
         if ($validator->fails()) {
             return response()->json($validator->messages(), 422);
         }
-        
+
         Symptom::updateOrCreate(
             ['id' => $request->symptom_id],
             ['name' => $request->name]
@@ -144,5 +149,12 @@ class AdminSymptomsController extends Controller
         $symptom_id = $request->symptom_id;
         $symptom = Symptom::find($symptom_id)->delete();
         return response()->json(['success'=>'Symptom deleted successfully.']);
+    }
+
+    public function hideSymptom(Request $request) {
+        $symptom = Symptom::find($request->id);
+        $symptom->hide = $request->hide;
+        $symptom->save();
+        return response()->json(['success' => 'Symptom\'s hide status changed successfully.']);
     }
 }

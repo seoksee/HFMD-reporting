@@ -59,6 +59,7 @@ Route::group(['middleware'=>'admin'], function(){
     Route::post('/admin/symptoms/getTableData','AdminSymptomsController@getTableData');
     Route::post('/admin/symptoms/editData', 'AdminSymptomsController@editData');
     Route::post('/admin/symptoms/deleteData', 'AdminSymptomsController@deleteData');
+    Route::get('/hideSymptom', 'AdminSymptomsController@hideSymptom');
 
     Route::resource('/admin/notifications', 'AdminNotificationsController', ['as' => 'admin']);
     Route::post('/admin/notifications/getTableData', 'AdminNotificationsController@getTableData');
