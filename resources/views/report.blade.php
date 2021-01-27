@@ -64,8 +64,10 @@
 
                 <div class="col-md-6 col-form-label">
                     @foreach ($symptoms as $symptom)
+                        @if ($symptom->hide != 1)
                         <input type="checkbox" class="custom-checkbox" name="symptoms[]" value="{{$symptom->id}}" >
                         {{ $symptom->name }} <br>
+                        @endif
                     @endforeach
                     <input type="checkbox" class="custom-checkbox"
                     onclick="var input = $('#other'); if(this.checked){ input.removeAttr('disabled'); input.focus();}else{input.attr('disabled','disabled');}" />
